@@ -20,7 +20,8 @@
     "build": "cross-env NODE_ENV=production webpack --config internals/webpack/webpack.prod.js --color -p --progress --hide-modules --display-optimization-bailout",
     "build:clean": "rimraf ./build",
     "start": "webpack-dev-server --open --config internals/webpack/webpack.dev.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettify": "prettier --write ."
   },
   "husky": {
     "hooks": {
