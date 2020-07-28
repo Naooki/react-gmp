@@ -1,0 +1,19 @@
+{
+  "name": "react-gmp",
+  "version": "0.1.0",
+  "description": "EPAM React GMP 2020Q3 app",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "npm": ">=6.4.1",
+    "node": ">=10.13.0"
+  },
+  "author": "Yahor Sheinikau",
+  "license": "ISC",
+  "keywords": ["React"],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
