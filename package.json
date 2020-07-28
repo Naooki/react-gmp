@@ -21,7 +21,11 @@
     "build:clean": "rimraf ./build",
     "start": "webpack-dev-server --open --config internals/webpack/webpack.dev.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prettify": "prettier --write ."
+    "prettify": "prettier --write .",
+    "lint": "npm run lint:eslint:quiet .",
+    "lint:eslint:quiet": "eslint --ext .ts,.tsx,.js,.jsx --no-error-on-unmatched-pattern --quiet",
+    "lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx --no-error-on-unmatched-pattern",
+    "lint:eslint:fix": "eslint --ext .ts,.tsx,.js,.jsx --no-error-on-unmatched-pattern --quiet --fix"
   },
   "husky": {
     "hooks": {
@@ -29,7 +33,11 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,json,css,scss,md}": [
+    "*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "npm run lint:eslint:fix"
+    ],
+    "*.{css,scss,md,json}": [
       "prettier --write"
     ]
   },
@@ -47,10 +55,22 @@
   },
   "devDependencies": {
     "@types/react-dom": "^16.9.8",
+    "@typescript-eslint/eslint-plugin": "^3.7.1",
+    "@typescript-eslint/parser": "^3.7.1",
     "babel-loader": "^8.1.0",
     "compression-webpack-plugin": "^4.0.0",
     "cross-env": "^7.0.2",
     "error-overlay-webpack-plugin": "^0.4.1",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-airbnb-typescript": "^9.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jest": "^23.19.0",
+    "eslint-plugin-jsx-a11y": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
     "fork-ts-checker-webpack-plugin": "^5.0.12",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.3.0",
