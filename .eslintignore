@@ -4,3 +4,4 @@ build
 
 internals/webpack
 .eslintrc.js
+jest.config.js
