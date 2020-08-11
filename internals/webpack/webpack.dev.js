@@ -48,6 +48,8 @@ module.exports = require('./webpack.base')({
 
   devServer: {
     contentBase: './build',
+    publicPath: '/',
+    historyApiFallback: true,
   },
 
   performance: {
