@@ -7,16 +7,16 @@ export interface IThemeInterface {
   primary: string;
   componentBackground: string;
   componentBackgroundSecondary: string;
-  componentBackgroundHover: string;
+  pageBackground: string;
 }
 
 export const theme = {
   default: {
     text: '#fff',
     primary: '#f65261',
-    componentBackground: '#424242',
-    componentBackgroundSecondary: '#555',
-    componentBackgroundHover: '#232323',
+    componentBackground: '#232323',
+    componentBackgroundSecondary: 'rgba(85,85,85,0.8)',
+    pageBackground: '#555',
   },
 };
 const {
