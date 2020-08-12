@@ -27,7 +27,9 @@ module.exports = {
     project: './tsconfig.eslint.json',
   },
   plugins: ['react', '@typescript-eslint', 'jest'],
-  rules: {},
+  rules: {
+    'react/destructuring-assignment': 0,
+  },
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
