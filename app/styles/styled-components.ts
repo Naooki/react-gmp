@@ -7,6 +7,7 @@ export interface IThemeInterface {
   primary: string;
   componentBackground: string;
   componentBackgroundSecondary: string;
+  footerBackground: string;
   pageBackground: string;
 }
 
@@ -16,6 +17,7 @@ export const theme = {
     primary: '#f65261',
     componentBackground: '#232323',
     componentBackgroundSecondary: 'rgba(85,85,85,0.8)',
+    footerBackground: '#424242',
     pageBackground: '#555',
   },
 };

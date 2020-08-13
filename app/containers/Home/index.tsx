@@ -4,9 +4,10 @@ import { Switch, Route } from 'react-router-dom';
 import Movies from 'containers/Movies';
 import MoviePage from 'components/MoviePage';
 import MovieSearch from 'components/MovieSearch';
-
+import Footer from 'components/Footer';
 import IconLink from 'components/IconLink';
 import SecondaryButton from 'components/SecondaryButton';
+
 import Topbar from './Topbar';
 import Header from './Header';
 import Logo from './Logo';
@@ -36,6 +37,10 @@ function Home() {
       </Topbar>
 
       <Movies />
+
+      <Footer>
+        <Logo>netflixRoulette</Logo>
+      </Footer>
     </>
   );
 }

@@ -18,9 +18,11 @@ const GlobalStyle = createGlobalStyle`
   }
 
   #app {
-    background: ${props => props.theme.pageBackground};
+    display: flex;
+    flex-direction: column;
     min-height: 100%;
     min-width: 100%;
+    background: ${props => props.theme.pageBackground};
   }
 
   p,
