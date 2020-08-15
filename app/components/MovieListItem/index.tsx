@@ -15,6 +15,7 @@ const MovieImage = styled.img.attrs(props => ({
   src: props.src,
   alt: props.alt,
 }))`
+  display: block;
   width: 100%;
   height: 400px;
 `;
