@@ -29,6 +29,7 @@ module.exports = {
   plugins: ['react', '@typescript-eslint', 'jest'],
   rules: {
     'react/destructuring-assignment': 0,
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
   settings: {
     'import/parsers': {
