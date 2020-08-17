@@ -7,12 +7,15 @@ import MovieSearch from 'components/MovieSearch';
 import Footer from 'components/Footer';
 import IconLink from 'components/IconLink';
 import SecondaryButton from 'components/SecondaryButton';
+import Modal from 'components/Modal';
 
 import Topbar from './Topbar';
 import Header from './Header';
 import Logo from './Logo';
 
 function Home() {
+  const [showModal, toggleModal] = React.useState(false);
+
   return (
     <>
       <Topbar>
@@ -25,7 +28,11 @@ function Home() {
               component={() => <IconLink to="/">search</IconLink>}
             />
             <Route
-              component={() => <SecondaryButton>+ Add Movie</SecondaryButton>}
+              component={() => (
+                <SecondaryButton onClick={() => toggleModal(true)}>
+                  + Add Movie
+                </SecondaryButton>
+              )}
             />
           </Switch>
         </Header>
@@ -41,6 +48,10 @@ function Home() {
       <Footer>
         <Logo>netflixRoulette</Logo>
       </Footer>
+
+      <Modal show={showModal} handleClose={() => toggleModal(false)}>
+        Some modal content.
+      </Modal>
     </>
   );
 }
