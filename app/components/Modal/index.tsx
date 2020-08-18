@@ -1,5 +1,7 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const Overlay = styled.div`
   position: fixed;
@@ -27,6 +29,27 @@ const ModalWrapper = styled.section`
   transform: translate(-50%, -50%);
 `;
 
+const ModalHeader = styled.header`
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem;
+`;
+
+const ModalCloseBtn = styled.button`
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  background: transparent;
+  color: ${props => props.theme.text};
+  border: none;
+  :focus {
+    outline: none;
+  }
+`;
+
+const ModalMain = styled.main`
+  margin: 0 3rem;
+`;
+
 interface Props {
   show: boolean;
   children: React.ReactNode;
@@ -41,10 +64,12 @@ const Modal = (props: Props) => {
   return (
     <Overlay className={showHideClassName}>
       <ModalWrapper>
-        {props.children}
-        <button type="button" onClick={props.handleClose}>
-          close
-        </button>
+        <ModalHeader>
+          <ModalCloseBtn onClick={props.handleClose}>
+            <FontAwesomeIcon icon={faTimes} />
+          </ModalCloseBtn>
+        </ModalHeader>
+        <ModalMain>{props.children}</ModalMain>
       </ModalWrapper>
     </Overlay>
   );

@@ -6,9 +6,11 @@ import MoviePage from 'components/MoviePage';
 import MovieSearch from 'components/MovieSearch';
 import Footer from 'components/Footer';
 import IconLink from 'components/IconLink';
-import SecondaryButton from 'components/SecondaryButton';
 import Modal from 'components/Modal';
+import AddMovie from 'containers/AddMovie';
+import { ButtonVariant } from 'components/Button';
 
+import AddMovieButton from './AddMovieButton';
 import Topbar from './Topbar';
 import Header from './Header';
 import Logo from './Logo';
@@ -29,9 +31,13 @@ function Home() {
             />
             <Route
               component={() => (
-                <SecondaryButton onClick={() => toggleModal(true)}>
+                <AddMovieButton
+                  className={ButtonVariant.Default}
+                  type="button"
+                  onClick={() => toggleModal(true)}
+                >
                   + Add Movie
-                </SecondaryButton>
+                </AddMovieButton>
               )}
             />
           </Switch>
@@ -50,7 +56,7 @@ function Home() {
       </Footer>
 
       <Modal show={showModal} handleClose={() => toggleModal(false)}>
-        Some modal content.
+        <AddMovie />
       </Modal>
     </>
   );
