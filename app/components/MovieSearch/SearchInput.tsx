@@ -1,10 +1,6 @@
 import styled from 'styles/styled-components';
 
-interface Props {
-  placeholder: string;
-}
-
-const TextInput = styled.input.attrs(props => ({
+const SearchInput = styled.input.attrs(props => ({
   type: 'text',
   placeholder: props.placeholder,
 }))`
@@ -20,4 +16,4 @@ const TextInput = styled.input.attrs(props => ({
   }
 `;
 
-export default TextInput;
+export default SearchInput;

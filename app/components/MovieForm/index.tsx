@@ -3,6 +3,7 @@ import styled from 'styles/styled-components';
 
 import { Movie } from 'entities/Movie';
 import Button, { ButtonVariant } from 'components/Button';
+import Control from './Control';
 
 interface Props {
   movie?: Movie;
@@ -29,19 +30,23 @@ const FormActions = styled.div`
 function MovieForm(props: Props) {
   const [movie, setMovie] = React.useState(props.movie || ({} as Movie));
 
-  const updateMovie = (key: keyof Movie, value: any) => {
+  const updateMovie = (
+    key: keyof Movie,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setMovie({
       ...movie,
-      [key]: value,
+      [key]: e.target.value,
     });
   };
 
   return (
     <Form>
-      <input
+      <Control
         type="text"
-        title="title"
-        value={movie.title}
+        id="title"
+        label="title"
+        value={movie.title || ''}
         onChange={value => updateMovie('title', value)}
       />
       <input

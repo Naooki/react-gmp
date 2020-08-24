@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
 
-import TextInput from 'components/TextInput';
+import Heading from 'components/Heading';
 import Button, { ButtonVariant } from 'components/Button';
-import Heading from './Heading';
+import SearchInput from './SearchInput';
 
 const Wrapper = styled.div`
   padding: 0 3rem;
@@ -22,7 +22,7 @@ const MovieSearch = () => {
     <Wrapper>
       <Heading>find your movie</Heading>
       <SearchControlWrapper>
-        <TextInput placeholder="What do you want to watch?" />
+        <SearchInput placeholder="What do you want to watch?" />
         <Button className={ButtonVariant.Contained} type="button">
           search
         </Button>

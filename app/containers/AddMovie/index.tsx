@@ -2,13 +2,14 @@ import * as React from 'react';
 
 import { Movie } from 'entities/Movie';
 import MovieForm from 'components/MovieForm';
+import Heading from 'components/Heading';
 
 function AddMovie() {
   const movie = {} as Movie;
 
   return (
     <>
-      <h2>add movie</h2>
+      <Heading>add movie</Heading>
       <MovieForm movie={movie} />
     </>
   );
