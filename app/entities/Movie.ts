@@ -1,3 +1,5 @@
+import MovieGenre from './MovieGenre';
+
 export interface Movie {
   id: string;
   releaseDate: string;
@@ -6,4 +8,5 @@ export interface Movie {
   imageUrl?: string;
   duration: number;
   rating: number;
+  genres: MovieGenre[];
 }

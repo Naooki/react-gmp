@@ -5,8 +5,8 @@ import Input from './Input';
 import Label from './Label';
 import ErrorMsg from './ErrorMsg';
 
-const TextInput = styled(Input).attrs({
-  type: 'text',
+const DateInput = styled(Input).attrs({
+  type: 'date',
 })``;
 
 interface Props {
@@ -17,19 +17,14 @@ interface Props {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const TextControl = (props: Props) => {
+const DateControl = (props: Props) => {
   return (
     <>
       <Label htmlFor={props.id}>{props.label}</Label>
-      <TextInput
-        placeholder={props.placeholder}
-        id={props.id}
-        value={props.value}
-        onChange={props.onChange}
-      />
+      <DateInput id={props.id} value={props.value} onChange={props.onChange} />
       <ErrorMsg>Some generic error</ErrorMsg>
     </>
   );
 };
 
-export default TextControl;
+export default DateControl;

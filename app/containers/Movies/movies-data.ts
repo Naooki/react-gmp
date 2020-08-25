@@ -1,4 +1,5 @@
 import { Movie } from 'entities/Movie';
+import MovieGenre from 'entities/MovieGenre';
 
 import img0 from 'assets/images/pulp-fiction.jpg';
 import img1 from 'assets/images/bohemian-rhapsody.jpg';
@@ -12,6 +13,7 @@ const movies: Movie[] = [
     imageUrl: img0,
     duration: 154,
     rating: 4.2,
+    genres: [MovieGenre.Comedy, MovieGenre.Crime],
   },
   {
     id: 'test-id-1',
@@ -21,6 +23,7 @@ const movies: Movie[] = [
     imageUrl: img1,
     duration: 154,
     rating: 4.0,
+    genres: [MovieGenre.Documentary],
   },
   {
     id: 'test-id-2',
@@ -29,6 +32,7 @@ const movies: Movie[] = [
     title: 'Kill Bill: Vol 2',
     duration: 154,
     rating: 4.2,
+    genres: [MovieGenre.Comedy, MovieGenre.Crime],
   },
   {
     id: 'test-id-3',
@@ -37,6 +41,7 @@ const movies: Movie[] = [
     title: 'Avengers: War of Infinity',
     duration: 154,
     rating: 4.8,
+    genres: [],
   },
   {
     id: 'test-id-4',
@@ -45,6 +50,7 @@ const movies: Movie[] = [
     title: 'Inception',
     duration: 154,
     rating: 4.6,
+    genres: [],
   },
   {
     id: 'test-id-5',
@@ -53,6 +59,7 @@ const movies: Movie[] = [
     title: 'Reservoir dogs',
     duration: 154,
     rating: 4.6,
+    genres: [MovieGenre.Crime],
   },
 ];
 
