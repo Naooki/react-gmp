@@ -21,12 +21,14 @@ const Overlay = styled.div`
 
 const ModalWrapper = styled.section`
   position: fixed;
-  background: ${props => props.theme.componentBackground};
+  max-height: 80%;
   width: 60%;
-  height: auto;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: ${props => props.theme.componentBackground};
 `;
 
 const ModalHeader = styled.header`
@@ -47,7 +49,8 @@ const ModalCloseBtn = styled.button`
 `;
 
 const ModalMain = styled.main`
-  margin: 0 3rem;
+  padding: 0 3rem;
+  overflow-y: scroll;
 `;
 
 interface Props {
