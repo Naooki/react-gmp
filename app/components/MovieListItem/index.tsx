@@ -5,9 +5,11 @@ import { Movie } from 'entities/Movie';
 
 interface Props {
   movie: Movie;
+  onMovieEdit: (id: string) => void;
 }
 
 const MovieItemWrapper = styled.div`
+  position: relative;
   width: 300px;
 `;
 
@@ -68,11 +70,22 @@ const MovieItemAbout = styled.span`
   font-size: 0.8rem;
 `;
 
+const MenuButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: ${props => props.theme.text};
+  background: ${props => props.theme.componentBackground};
+`;
+
 const MovieListItem = (props: Props) => {
   const releaseYear = props.movie.releaseDate;
 
   return (
     <MovieItemWrapper>
+      <MenuButton onClick={() => props.onMovieEdit(props.movie.id)}>
+        edit
+      </MenuButton>
       {props.movie.imageUrl ? (
         <MovieImage src={props.movie.imageUrl} alt="Movie poster" />
       ) : (
