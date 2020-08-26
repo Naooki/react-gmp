@@ -11,12 +11,6 @@ const Overlay = styled.div`
   height: 100%;
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(1rem);
-  &.display-block {
-    display: block;
-  }
-  &.display-none {
-    display: none;
-  }
 `;
 
 const ModalWrapper = styled.section`
@@ -54,21 +48,16 @@ const ModalMain = styled.main`
 `;
 
 interface Props {
-  show: boolean;
   children: React.ReactNode;
-  handleClose: () => void;
+  onClose: () => void;
 }
 
 const Modal = (props: Props) => {
-  const showHideClassName = props.show
-    ? 'modal display-block'
-    : 'modal display-none';
-
   return (
-    <Overlay className={showHideClassName}>
+    <Overlay>
       <ModalWrapper>
         <ModalHeader>
-          <ModalCloseBtn onClick={props.handleClose}>
+          <ModalCloseBtn onClick={props.onClose}>
             <FontAwesomeIcon icon={faTimes} />
           </ModalCloseBtn>
         </ModalHeader>

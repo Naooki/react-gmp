@@ -55,9 +55,11 @@ function Home() {
         <Logo>netflixRoulette</Logo>
       </Footer>
 
-      <Modal show={showModal} handleClose={() => toggleModal(false)}>
-        <AddMovie />
-      </Modal>
+      {showModal && (
+        <Modal onClose={() => toggleModal(false)}>
+          <AddMovie />
+        </Modal>
+      )}
     </>
   );
 }
