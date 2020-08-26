@@ -5,17 +5,18 @@ import Login from 'containers/Login';
 import Home from 'containers/Home';
 import NotFoundPage from 'containers/NotFoundPage';
 import GlobalStyle from 'global-styles';
+import { ModalProvider } from 'components/Modal';
 
 function App() {
   return (
-    <>
+    <ModalProvider>
       <Switch>
         <Route exact path="/login" component={Login} />
         <Route path="/" component={Home} />
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />
-    </>
+    </ModalProvider>
   );
 }
 

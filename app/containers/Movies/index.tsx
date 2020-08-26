@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
 
+import Modal from 'components/Modal';
+import EditMovie from 'containers/EditMovie';
 import { Movie } from 'entities/Movie';
 import MovieList from 'components/MovieList';
 import SortBy, { SortType } from 'components/SortBy';
@@ -60,17 +62,38 @@ const Movies = () => {
     setMovies([...reorderedMovies]);
   };
 
+  const [modalContent, toggleModal] = React.useState<React.ReactNode>(null);
+
+  const onMovieEdit = async (id: string) => {
+    // MOCK: fetch movie by id
+    const movie = await Promise.resolve(
+      moviesData.find(m => m.id === id) as Movie,
+    );
+
+    const editMovie = (
+      <Modal onClose={() => toggleModal(null)}>
+        <EditMovie movie={movie} />
+      </Modal>
+    );
+
+    toggleModal(editMovie);
+  };
+
   return (
-    <Main>
-      <MovieListControls>
-        <Tabs tabs={tabs} activeTab={activeTab} tabChange={activeTabChange} />
-        <SortControls>
-          <span className="label">sort by</span>
-          <SortBy label="release date" orderChange={releaseDateOrderChange} />
-        </SortControls>
-      </MovieListControls>
-      <MovieList movies={movies} />
-    </Main>
+    <>
+      <Main>
+        <MovieListControls>
+          <Tabs tabs={tabs} activeTab={activeTab} tabChange={activeTabChange} />
+          <SortControls>
+            <span className="label">sort by</span>
+            <SortBy label="release date" orderChange={releaseDateOrderChange} />
+          </SortControls>
+        </MovieListControls>
+        <MovieList movies={movies} onMovieEdit={onMovieEdit} />
+      </Main>
+
+      {modalContent}
+    </>
   );
 };
 
