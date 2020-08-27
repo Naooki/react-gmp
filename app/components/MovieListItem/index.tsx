@@ -2,6 +2,8 @@ import * as React from 'react';
 import styled from 'styles/styled-components';
 
 import { Movie } from 'entities/Movie';
+import Menu from 'components/Menu';
+import MenuItem from 'components/Menu/MenuItem';
 
 interface Props {
   movie: Movie;
@@ -11,6 +13,17 @@ interface Props {
 const MovieItemWrapper = styled.div`
   position: relative;
   width: 300px;
+
+  & > .movie-item-menu {
+    display: none;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  &:hover > .movie-item-menu {
+    display: block;
+  }
 `;
 
 const MovieImage = styled.img.attrs(props => ({
@@ -70,22 +83,17 @@ const MovieItemAbout = styled.span`
   font-size: 0.8rem;
 `;
 
-const MenuButton = styled.button`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  color: ${props => props.theme.text};
-  background: ${props => props.theme.componentBackground};
-`;
-
 const MovieListItem = (props: Props) => {
   const releaseYear = props.movie.releaseDate;
 
   return (
     <MovieItemWrapper>
-      <MenuButton onClick={() => props.onMovieEdit(props.movie.id)}>
-        edit
-      </MenuButton>
+      <Menu className="movie-item-menu">
+        <MenuItem onClick={() => props.onMovieEdit(props.movie.id)}>
+          Edit
+        </MenuItem>
+        <MenuItem>Delete</MenuItem>
+      </Menu>
       {props.movie.imageUrl ? (
         <MovieImage src={props.movie.imageUrl} alt="Movie poster" />
       ) : (
