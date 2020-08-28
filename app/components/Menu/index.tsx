@@ -4,6 +4,8 @@ import { lighten } from 'polished';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faTimes } from '@fortawesome/free-solid-svg-icons';
 
+import useClickOutsideListenerRef from 'utils/hooks/useClickOutisedeListenerRef';
+
 const MenuWrapper = styled.div`
   position: relative;
 `;
@@ -56,13 +58,20 @@ const Menu = (props: Props) => {
     isOpened,
   ]);
 
+  const className = React.useMemo(
+    () => `${props.className} ${isOpened ? 'opened' : ''}`,
+    [props.className, isOpened],
+  );
+
+  const ref = useClickOutsideListenerRef<HTMLDivElement>(toggleIsOpened);
+
   return (
-    <MenuWrapper className={props.className}>
+    <MenuWrapper className={className}>
       <MenuButton onClick={toggleIsOpened}>
         <FontAwesomeIcon icon={faEllipsisV} />
       </MenuButton>
       {isOpened && (
-        <MenuDropdown>
+        <MenuDropdown ref={ref}>
           <MenuDropdownCloseBtn onClick={toggleIsOpened}>
             <FontAwesomeIcon icon={faTimes} />
           </MenuDropdownCloseBtn>

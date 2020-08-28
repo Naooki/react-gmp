@@ -21,6 +21,10 @@ const MovieItemWrapper = styled.div`
     right: 1rem;
   }
 
+  & > .movie-item-menu.opened {
+    display: block;
+  }
+
   &:hover > .movie-item-menu {
     display: block;
   }
