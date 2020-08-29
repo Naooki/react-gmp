@@ -49,8 +49,10 @@ const ModalCloseBtn = styled.button`
 `;
 
 const ModalMain = styled.main`
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   padding: 0 3rem;
-  overflow-y: scroll;
+  overflow: auto;
 `;
 
 const mockDiv = document.createElement('div');
