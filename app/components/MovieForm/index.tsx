@@ -4,6 +4,7 @@ import styled from 'styles/styled-components';
 import { Movie } from 'entities/Movie';
 import MovieGenre from 'entities/MovieGenre';
 import Button, { ButtonVariant } from 'components/Button';
+import ModalActions from 'components/Modal/ModalActions';
 import TextControl from './TextControl';
 import DateControl from './DateControl';
 import NumberControl from './NumberControl';
@@ -16,19 +17,6 @@ interface Props {
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-`;
-
-const FormActions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  height: 3rem;
-  margin: 3rem 0 2rem;
-  > button {
-    flex-basis: 30%;
-  }
-  > button:not(:last-child) {
-    margin-right: 1rem;
-  }
 `;
 
 const movieGenreOptions = Object.keys(MovieGenre).map(id => ({
@@ -115,14 +103,14 @@ function MovieForm(props: Props) {
         onChange={value => updateMovie('duration', value)}
       />
 
-      <FormActions>
+      <ModalActions>
         <Button className={ButtonVariant.Outlined} type="reset">
           reset
         </Button>
         <Button className={ButtonVariant.Contained} type="submit">
           submit
         </Button>
-      </FormActions>
+      </ModalActions>
     </Form>
   );
 }

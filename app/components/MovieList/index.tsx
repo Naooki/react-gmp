@@ -7,6 +7,7 @@ import MovieListItem from 'components/MovieListItem';
 interface Props {
   movies: Movie[];
   onMovieEdit: (id: string) => void;
+  onMovieDelete: (id: string) => void;
 }
 
 const Wrapper = styled.div``;
@@ -38,7 +39,11 @@ const MovieList = (props: Props) => {
       <MoviesUl>
         {props.movies.map(movie => (
           <li key={movie.id}>
-            <MovieListItem movie={movie} onMovieEdit={props.onMovieEdit} />
+            <MovieListItem
+              movie={movie}
+              onMovieEdit={props.onMovieEdit}
+              onMovieDelete={props.onMovieDelete}
+            />
           </li>
         ))}
       </MoviesUl>

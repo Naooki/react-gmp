@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styles/styled-components';
 
 import Modal from 'components/Modal';
+import Confirmation from 'components/Confirmation';
 import EditMovie from 'containers/EditMovie';
 import { Movie } from 'entities/Movie';
 import MovieList from 'components/MovieList';
@@ -79,6 +80,30 @@ const Movies = () => {
     toggleModal(editMovie);
   };
 
+  const onMovieDelete = (id: string) => {
+    const deleteMovie = async (movieId: string) => {
+      // MOCK: Delete Api call
+      console.log(`Delete movie with id: ${movieId}`);
+      await Promise.resolve(movieId);
+      toggleModal(null);
+    };
+
+    const heading = 'delete movie';
+    const text = 'Are you sure you want to delete this movie?';
+
+    const deleteMovieConfirmation = (
+      <Modal onClose={() => toggleModal(null)}>
+        <Confirmation
+          heading={heading}
+          text={text}
+          onConfirm={() => deleteMovie(id)}
+        />
+      </Modal>
+    );
+
+    toggleModal(deleteMovieConfirmation);
+  };
+
   return (
     <>
       <Main>
@@ -89,7 +114,11 @@ const Movies = () => {
             <SortBy label="release date" orderChange={releaseDateOrderChange} />
           </SortControls>
         </MovieListControls>
-        <MovieList movies={movies} onMovieEdit={onMovieEdit} />
+        <MovieList
+          movies={movies}
+          onMovieEdit={onMovieEdit}
+          onMovieDelete={onMovieDelete}
+        />
       </Main>
 
       {modalContent}

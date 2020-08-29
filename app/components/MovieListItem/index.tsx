@@ -8,6 +8,7 @@ import MenuItem from 'components/Menu/MenuItem';
 interface Props {
   movie: Movie;
   onMovieEdit: (id: string) => void;
+  onMovieDelete: (id: string) => void;
 }
 
 const MovieItemWrapper = styled.div`
@@ -96,7 +97,9 @@ const MovieListItem = (props: Props) => {
         <MenuItem onClick={() => props.onMovieEdit(props.movie.id)}>
           Edit
         </MenuItem>
-        <MenuItem>Delete</MenuItem>
+        <MenuItem onClick={() => props.onMovieDelete(props.movie.id)}>
+          Delete
+        </MenuItem>
       </Menu>
       {props.movie.imageUrl ? (
         <MovieImage src={props.movie.imageUrl} alt="Movie poster" />
