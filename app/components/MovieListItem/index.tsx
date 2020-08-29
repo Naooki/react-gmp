@@ -9,6 +9,7 @@ interface Props {
   movie: Movie;
   onMovieEdit: (id: string) => void;
   onMovieDelete: (id: string) => void;
+  onMovieClick: (id: string) => void;
 }
 
 const MovieItemWrapper = styled.div`
@@ -81,7 +82,7 @@ const MovieItemYear = styled.div`
   border-radius: 4px;
 `;
 
-const MovieItemAbout = styled.span`
+const MovieItemGenres = styled.span`
   display: inline-block;
   width: 100%;
   color: #aaa;
@@ -90,9 +91,12 @@ const MovieItemAbout = styled.span`
 
 const MovieListItem = (props: Props) => {
   const releaseYear = props.movie.releaseDate;
+  const genres = React.useMemo(() => props.movie.genres.join(', '), [
+    props.movie.genres,
+  ]);
 
   return (
-    <MovieItemWrapper>
+    <MovieItemWrapper onClick={() => props.onMovieClick(props.movie.id)}>
       <Menu className="movie-item-menu">
         <MenuItem onClick={() => props.onMovieEdit(props.movie.id)}>
           Edit
@@ -109,7 +113,7 @@ const MovieListItem = (props: Props) => {
       <MovieItemDesc>
         <MovieItemHeading>{props.movie.title}</MovieItemHeading>
         <MovieItemYear>{releaseYear}</MovieItemYear>
-        <MovieItemAbout>{props.movie.about}</MovieItemAbout>
+        <MovieItemGenres>{genres}</MovieItemGenres>
       </MovieItemDesc>
     </MovieItemWrapper>
   );

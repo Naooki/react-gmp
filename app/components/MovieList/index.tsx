@@ -8,6 +8,7 @@ interface Props {
   movies: Movie[];
   onMovieEdit: (id: string) => void;
   onMovieDelete: (id: string) => void;
+  onMovieClick: (id: string) => void;
 }
 
 const Wrapper = styled.div``;
@@ -41,6 +42,7 @@ const MovieList = (props: Props) => {
           <li key={movie.id}>
             <MovieListItem
               movie={movie}
+              onMovieClick={props.onMovieClick}
               onMovieEdit={props.onMovieEdit}
               onMovieDelete={props.onMovieDelete}
             />

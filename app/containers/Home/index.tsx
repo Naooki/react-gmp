@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Switch, Route } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 import Movies from 'containers/Movies';
 import MoviePage from 'components/MoviePage';
@@ -27,7 +29,11 @@ function Home() {
             <Route
               exact
               path="/movie/:id"
-              component={() => <IconLink to="/">search</IconLink>}
+              component={() => (
+                <IconLink to="/">
+                  <FontAwesomeIcon icon={faSearch} />
+                </IconLink>
+              )}
             />
             <Route
               component={() => (

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
+import { useHistory } from 'react-router-dom';
 
 import Modal from 'components/Modal';
 import Confirmation from 'components/Confirmation';
@@ -41,6 +42,8 @@ const Movies = () => {
     { label: 'horror' },
     { label: 'crime' },
   ];
+
+  const history = useHistory();
 
   const [movies, setMovies] = React.useState([...moviesData]);
   const [activeTab, activeTabChange] = React.useState(tabs[0]);
@@ -116,6 +119,7 @@ const Movies = () => {
         </MovieListControls>
         <MovieList
           movies={movies}
+          onMovieClick={id => history.push(`/movie/${id}`)}
           onMovieEdit={onMovieEdit}
           onMovieDelete={onMovieDelete}
         />
