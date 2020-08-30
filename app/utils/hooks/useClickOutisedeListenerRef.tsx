@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef } from 'react';
 
 function useClickOutsideListenerRef<T extends HTMLElement>(
-  onClose: () => void,
+  onClose: (e: Event) => void,
 ) {
   const ref = useRef<T>(null);
   const escapeListener = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        onClose(e);
       }
     },
     [onClose],
@@ -15,7 +15,7 @@ function useClickOutsideListenerRef<T extends HTMLElement>(
   const clickListener = useCallback(
     (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as T)) {
-        onClose?.();
+        onClose?.(e);
       }
     },
     [onClose],

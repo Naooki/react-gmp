@@ -54,9 +54,13 @@ interface Props {
 const Menu = (props: Props) => {
   const [isOpened, setIsOpened] = React.useState(false);
 
-  const toggleIsOpened = React.useCallback(() => setIsOpened(!isOpened), [
-    isOpened,
-  ]);
+  const toggleIsOpened = React.useCallback(
+    (e: { stopPropagation: () => void }) => {
+      e.stopPropagation();
+      setIsOpened(!isOpened);
+    },
+    [isOpened],
+  );
 
   const className = React.useMemo(
     () => `${props.className} ${isOpened ? 'opened' : ''}`,
@@ -75,7 +79,9 @@ const Menu = (props: Props) => {
           <MenuDropdownCloseBtn onClick={toggleIsOpened}>
             <FontAwesomeIcon icon={faTimes} />
           </MenuDropdownCloseBtn>
-          <MenuDropdownList>{props.children}</MenuDropdownList>
+          <MenuDropdownList onClick={e => e.stopPropagation()}>
+            {props.children}
+          </MenuDropdownList>
         </MenuDropdown>
       )}
     </MenuWrapper>
