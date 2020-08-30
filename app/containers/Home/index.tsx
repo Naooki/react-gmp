@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { matchPath, RouteComponentProps } from 'react-router';
 
 import Movies from 'containers/Movies';
 import MoviePage from 'components/MoviePage';
@@ -17,12 +18,21 @@ import Topbar from './Topbar';
 import Header from './Header';
 import Logo from './Logo';
 
-function Home() {
+type RouteParams = {
+  id: string;
+};
+
+function Home(props: RouteComponentProps<RouteParams>) {
   const [showModal, toggleModal] = React.useState(false);
+
+  const isMoviePageActive = React.useMemo(
+    () => !!matchPath(props.location.pathname, '/movie/:id'),
+    [props.location.pathname],
+  );
 
   return (
     <>
-      <Topbar>
+      <Topbar className={isMoviePageActive ? 'dark' : ''}>
         <Header>
           <Logo>netflixRoulette</Logo>
           <Switch>
