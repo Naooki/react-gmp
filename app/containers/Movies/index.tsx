@@ -68,7 +68,7 @@ const Movies = () => {
 
   const [modalContent, toggleModal] = React.useState<React.ReactNode>(null);
 
-  const onMovieEdit = async (id: string) => {
+  const onMovieEdit = React.useCallback(async (id: string) => {
     // MOCK: fetch movie by id
     const movie = await Promise.resolve(
       moviesData.find(m => m.id === id) as Movie,
@@ -81,31 +81,34 @@ const Movies = () => {
     );
 
     toggleModal(editMovie);
-  };
+  }, []);
 
-  const onMovieDelete = (id: string) => {
-    const deleteMovie = async (movieId: string) => {
-      // MOCK: Delete Api call
-      console.log(`Delete movie with id: ${movieId}`);
-      await Promise.resolve(movieId);
-      toggleModal(null);
-    };
+  const deleteMovie = React.useCallback(async (movieId: string) => {
+    // MOCK: Delete Api call
+    console.log(`Delete movie with id: ${movieId}`);
+    await Promise.resolve(movieId);
+    toggleModal(null);
+  }, []);
 
-    const heading = 'delete movie';
-    const text = 'Are you sure you want to delete this movie?';
+  const onMovieDelete = React.useCallback(
+    (id: string) => {
+      const heading = 'delete movie';
+      const text = 'Are you sure you want to delete this movie?';
 
-    const deleteMovieConfirmation = (
-      <Modal onClose={() => toggleModal(null)}>
-        <Confirmation
-          heading={heading}
-          text={text}
-          onConfirm={() => deleteMovie(id)}
-        />
-      </Modal>
-    );
+      const deleteMovieConfirmation = (
+        <Modal onClose={() => toggleModal(null)}>
+          <Confirmation
+            heading={heading}
+            text={text}
+            onConfirm={() => deleteMovie(id)}
+          />
+        </Modal>
+      );
 
-    toggleModal(deleteMovieConfirmation);
-  };
+      toggleModal(deleteMovieConfirmation);
+    },
+    [deleteMovie],
+  );
 
   return (
     <>
