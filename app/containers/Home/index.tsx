@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import {
+  Switch,
+  Route,
+  matchPath,
+  RouteComponentProps,
+} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { matchPath, RouteComponentProps } from 'react-router';
 
 import Movies from 'containers/Movies';
 import MoviePage from 'components/MoviePage';
