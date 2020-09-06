@@ -31,7 +31,7 @@ type RouteParams = {
 
 function Home(props: RouteComponentProps<RouteParams>) {
   const [showModal, toggleModal] = React.useState(false);
-  const [search] = React.useState(() => {
+  const [search, setSearch] = React.useState(() => {
     const queryParams = parse(props.location.search);
     return (queryParams.search as string) || '';
   });
@@ -45,7 +45,8 @@ function Home(props: RouteComponentProps<RouteParams>) {
   // const [searchBy] = React.useState('title');
 
   const onSearchChange = (value: string) => {
-    dispatch(push(`?searchBy=${'title'}&search=${value}`));
+    setSearch(value);
+    dispatch(push(value ? `?searchBy=${'title'}&search=${value}` : ''));
   };
 
   return (

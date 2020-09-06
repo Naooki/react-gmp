@@ -1,14 +1,16 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
-import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { parse } from 'query-string';
+import { push } from 'connected-react-router';
 
 import Modal from 'components/Modal';
 import Confirmation from 'components/Confirmation';
 import EditMovie from 'containers/EditMovie';
 import { Movie } from 'entities/Movie';
 import MovieList from 'components/MovieList';
-import SortBy from 'components/SortBy';
+import SortBy, { SortType } from 'components/SortBy';
 import Tabs from 'components/Tabs';
 import { makeSelectMovieItems } from './selectors';
 import { getMovies } from './actions';
@@ -45,35 +47,32 @@ const Movies = () => {
     { label: 'crime' },
   ];
 
-  const history = useHistory();
+  const location = useLocation();
 
-  // const [movies, setMovies] = React.useState([...moviesData]);
   const movies = useSelector(makeSelectMovieItems());
   const dispatch = useDispatch();
+  const [searchBy, search] = React.useMemo(() => {
+    const params = parse(location.search);
+    return [params.searchBy as 'title' | 'genres', params.search as string];
+  }, [location.search]);
+  const [sortBy] = React.useState<'release_date'>('release_date');
+  const [sortOrder, setSortOrder] = React.useState<SortType | null>(null);
 
   React.useEffect(() => {
-    dispatch(getMovies(''));
-  }, [dispatch]);
+    dispatch(getMovies(searchBy, search, sortBy, sortOrder));
+  }, [dispatch, searchBy, search, sortBy, sortOrder]);
 
   const [activeTab, activeTabChange] = React.useState(tabs[0]);
-  // const releaseDateOrderChange = (type: SortType) => {
-  //   let reorderedMovies: Movie[];
-  //   switch (type) {
-  //     case SortType.Ascending:
-  //       reorderedMovies = movies.sort((a, b) =>
-  //         a.releaseDate < b.releaseDate ? -1 : 1,
-  //       );
-  //       break;
-  //     case SortType.Descending:
-  //       reorderedMovies = movies.sort((a, b) =>
-  //         a.releaseDate > b.releaseDate ? -1 : 1,
-  //       );
-  //       break;
-  //     default:
-  //       reorderedMovies = [...moviesData];
-  //   }
-  //   setMovies([...reorderedMovies]);
-  // };
+  const releaseDateOrderChange = (type: SortType) => {
+    switch (type) {
+      case SortType.Ascending:
+      case SortType.Descending:
+        setSortOrder(type);
+        break;
+      default:
+        setSortOrder(null);
+    }
+  };
 
   const [modalContent, toggleModal] = React.useState<React.ReactNode>(null);
 
@@ -124,13 +123,13 @@ const Movies = () => {
           <Tabs tabs={tabs} activeTab={activeTab} tabChange={activeTabChange} />
           <SortControls>
             <span className="label">sort by</span>
-            <SortBy label="release date" orderChange={() => {}} />
+            <SortBy label="release date" orderChange={releaseDateOrderChange} />
           </SortControls>
         </MovieListControls>
         {movies ? (
           <MovieList
             movies={movies}
-            onMovieClick={id => history.push(`/movie/${id}`)}
+            onMovieClick={id => dispatch(push(`/movie/${id}`))}
             onMovieEdit={onMovieEdit}
             onMovieDelete={onMovieDelete}
           />

@@ -95,6 +95,14 @@ const MovieListItem = (props: Props) => {
     props.movie.genres,
   ]);
 
+  const [imageUrl, setImageUrl] = React.useState<string | null>(
+    () => props.movie.poster_path || null,
+  );
+
+  const onError = () => {
+    setImageUrl(null);
+  };
+
   return (
     <MovieItemWrapper onClick={() => props.onMovieClick(props.movie.id)}>
       <Menu className="movie-item-menu">
@@ -105,8 +113,8 @@ const MovieListItem = (props: Props) => {
           Delete
         </MenuItem>
       </Menu>
-      {props.movie.poster_path ? (
-        <MovieImage src={props.movie.poster_path} alt="Movie poster" />
+      {imageUrl ? (
+        <MovieImage src={imageUrl} onError={onError} alt="Movie poster" />
       ) : (
         <NoImage />
       )}
