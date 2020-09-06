@@ -6,9 +6,9 @@ import MovieListItem from 'components/MovieListItem';
 
 interface Props {
   movies: Movie[];
-  onMovieEdit: (id: string) => void;
-  onMovieDelete: (id: string) => void;
-  onMovieClick: (id: string) => void;
+  onMovieEdit: (id: number) => void;
+  onMovieDelete: (id: number) => void;
+  onMovieClick: (id: number) => void;
 }
 
 const Wrapper = styled.div``;

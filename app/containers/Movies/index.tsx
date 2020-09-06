@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
 import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Modal from 'components/Modal';
 import Confirmation from 'components/Confirmation';
@@ -10,8 +10,8 @@ import { Movie } from 'entities/Movie';
 import MovieList from 'components/MovieList';
 import SortBy from 'components/SortBy';
 import Tabs from 'components/Tabs';
-import moviesData from './movies-data';
 import { makeSelectMovieItems } from './selectors';
+import { getMovies } from './actions';
 
 const Main = styled.main`
   flex-grow: 1;
@@ -49,6 +49,11 @@ const Movies = () => {
 
   // const [movies, setMovies] = React.useState([...moviesData]);
   const movies = useSelector(makeSelectMovieItems());
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(getMovies(''));
+  }, [dispatch]);
 
   const [activeTab, activeTabChange] = React.useState(tabs[0]);
   // const releaseDateOrderChange = (type: SortType) => {
@@ -72,11 +77,9 @@ const Movies = () => {
 
   const [modalContent, toggleModal] = React.useState<React.ReactNode>(null);
 
-  const onMovieEdit = React.useCallback(async (id: string) => {
+  const onMovieEdit = React.useCallback(async (id: number) => {
     // MOCK: fetch movie by id
-    const movie = await Promise.resolve(
-      moviesData.find(m => m.id === id) as Movie,
-    );
+    const movie = { id } as Movie;
 
     const editMovie = (
       <Modal onClose={() => toggleModal(null)}>
@@ -87,7 +90,7 @@ const Movies = () => {
     toggleModal(editMovie);
   }, []);
 
-  const deleteMovie = React.useCallback(async (movieId: string) => {
+  const deleteMovie = React.useCallback(async (movieId: number) => {
     // MOCK: Delete Api call
     console.log(`Delete movie with id: ${movieId}`);
     await Promise.resolve(movieId);
@@ -95,7 +98,7 @@ const Movies = () => {
   }, []);
 
   const onMovieDelete = React.useCallback(
-    (id: string) => {
+    (id: number) => {
       const heading = 'delete movie';
       const text = 'Are you sure you want to delete this movie?';
 

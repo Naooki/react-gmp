@@ -7,9 +7,9 @@ import MenuItem from 'components/Menu/MenuItem';
 
 interface Props {
   movie: Movie;
-  onMovieEdit: (id: string) => void;
-  onMovieDelete: (id: string) => void;
-  onMovieClick: (id: string) => void;
+  onMovieEdit: (id: number) => void;
+  onMovieDelete: (id: number) => void;
+  onMovieClick: (id: number) => void;
 }
 
 const MovieItemWrapper = styled.div`
@@ -90,7 +90,7 @@ const MovieItemGenres = styled.span`
 `;
 
 const MovieListItem = (props: Props) => {
-  const releaseYear = props.movie.releaseDate;
+  const releaseYear = props.movie.release_date;
   const genres = React.useMemo(() => props.movie.genres.join(', '), [
     props.movie.genres,
   ]);
@@ -105,8 +105,8 @@ const MovieListItem = (props: Props) => {
           Delete
         </MenuItem>
       </Menu>
-      {props.movie.imageUrl ? (
-        <MovieImage src={props.movie.imageUrl} alt="Movie poster" />
+      {props.movie.poster_path ? (
+        <MovieImage src={props.movie.poster_path} alt="Movie poster" />
       ) : (
         <NoImage />
       )}

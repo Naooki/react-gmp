@@ -1,12 +1,16 @@
 import MovieGenre from './MovieGenre';
 
 export interface Movie {
-  id: string;
-  releaseDate: string;
-  about: string;
+  id: number;
   title: string;
-  imageUrl?: string;
-  duration: number;
-  rating: number;
+  tagline: string;
+  vote_average: number;
+  vote_count: number;
+  release_date: string;
+  poster_path?: string;
+  overview?: string;
+  budget?: number;
+  revenue?: number;
   genres: MovieGenre[];
+  runtime: number;
 }

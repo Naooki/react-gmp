@@ -3,7 +3,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styles/styled-components';
 
 import { Movie } from 'entities/Movie';
-import moviesData from 'containers/Movies/movies-data';
 
 const Article = styled.article`
   display: grid;
@@ -64,23 +63,25 @@ interface Props
 
 const MoviePage = (props: Props) => {
   const { id } = props.match.params;
+  console.log(id);
 
   // MOCK: fetch movie here
-  const movie = moviesData.find(m => m.id === id) as Movie;
+  // const movie = moviesData.find(m => m.id === id) as Movie;
+  const movie = {} as Movie;
 
-  const rating = React.useMemo(() => movie.rating.toPrecision(2), [
-    movie.rating,
+  const rating = React.useMemo(() => movie.vote_average.toPrecision(2), [
+    movie.vote_average,
   ]);
   const genres = React.useMemo(() => movie.genres.join(', '), [movie.genres]);
-  const releaseYear = React.useMemo(() => movie.releaseDate.slice(0, 4), [
-    movie.releaseDate,
+  const releaseYear = React.useMemo(() => movie.release_date.slice(0, 4), [
+    movie.release_date,
   ]);
 
   return (
     <Article>
       <aside>
         <img
-          src={movie.imageUrl}
+          src={movie.poster_path}
           alt="movie poster"
           className="movie-poster-image"
         />
@@ -93,9 +94,9 @@ const MoviePage = (props: Props) => {
         </header>
         <MovieHighlightInfo>
           <div>{releaseYear}</div>
-          <div>{`${movie.duration} min`}</div>
+          <div>{`${movie.runtime} min`}</div>
         </MovieHighlightInfo>
-        <MovieParagraph>{movie.about}</MovieParagraph>
+        <MovieParagraph>{movie.overview}</MovieParagraph>
       </MovieDescription>
     </Article>
   );

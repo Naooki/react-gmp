@@ -64,15 +64,15 @@ function MovieForm(props: Props) {
         id="releaseDate"
         label="release date"
         placeholder="Select date"
-        value={movie.releaseDate}
-        onChange={value => updateMovie('releaseDate', value)}
+        value={movie.release_date}
+        onChange={value => updateMovie('release_date', value)}
       />
       <TextControl
         id="movieUrl"
         label="movie url"
         placeholder="Movie URL here"
-        value={movie.imageUrl || ''}
-        onChange={value => updateMovie('imageUrl', value)}
+        value={movie.poster_path || ''}
+        onChange={value => updateMovie('poster_path', value)}
       />
       {/* <select name="genre" title="genre">
         <option value="crime">Crime</option>
@@ -92,15 +92,15 @@ function MovieForm(props: Props) {
         id="movieOverview"
         label="overview"
         placeholder="Overview here"
-        value={movie.about}
-        onChange={value => updateMovie('about', value)}
+        value={movie.overview || ''}
+        onChange={value => updateMovie('overview', value)}
       />
       <NumberControl
         id="movieRuntime"
         label="runtime"
         placeholder="Runtime here"
-        value={movie.duration}
-        onChange={value => updateMovie('duration', value)}
+        value={movie.runtime}
+        onChange={value => updateMovie('runtime', value)}
       />
 
       <ModalActions>
