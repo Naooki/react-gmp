@@ -1,11 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
 
 import configureStore from 'configureStore';
 import App from 'containers/App';
 import { ThemeProvider, theme } from 'styles/styled-components';
+import history from 'utils/history';
 
 const MOUNT_NODE = document.getElementById('app') as HTMLElement;
 
@@ -15,11 +16,11 @@ const store = configureStore(initialState);
 
 const ConnectedApp = () => (
   <Provider store={store}>
-    <BrowserRouter>
+    <ConnectedRouter history={history}>
       <ThemeProvider theme={theme.default}>
         <App />
       </ThemeProvider>
-    </BrowserRouter>
+    </ConnectedRouter>
   </Provider>
 );
 

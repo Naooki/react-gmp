@@ -17,13 +17,28 @@ const SearchControlWrapper = styled.div`
   grid-column-gap: 1rem;
 `;
 
-const MovieSearch = () => {
+interface Props {
+  value: string;
+  onSearchChange: (searchText: string) => void;
+}
+
+const MovieSearch = (props: Props) => {
+  const [value, setValue] = React.useState(props.value);
+
   return (
     <Wrapper>
       <Heading>find your movie</Heading>
       <SearchControlWrapper>
-        <SearchInput placeholder="What do you want to watch?" />
-        <Button className={ButtonVariant.Contained} type="button">
+        <SearchInput
+          placeholder="What do you want to watch?"
+          value={value}
+          onChange={e => setValue(e.target.value)}
+        />
+        <Button
+          className={ButtonVariant.Contained}
+          type="button"
+          onClick={() => props.onSearchChange(value)}
+        >
           search
         </Button>
       </SearchControlWrapper>

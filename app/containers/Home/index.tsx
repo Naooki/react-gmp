@@ -5,6 +5,9 @@ import {
   matchPath,
   RouteComponentProps,
 } from 'react-router-dom';
+import { push } from 'connected-react-router';
+import { useDispatch } from 'react-redux';
+import { parse } from 'query-string';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
@@ -28,11 +31,22 @@ type RouteParams = {
 
 function Home(props: RouteComponentProps<RouteParams>) {
   const [showModal, toggleModal] = React.useState(false);
+  const [search] = React.useState(() => {
+    const queryParams = parse(props.location.search);
+    return (queryParams.search as string) || '';
+  });
+  const dispatch = useDispatch();
 
   const isMoviePageActive = React.useMemo(
     () => !!matchPath(props.location.pathname, '/movie/:id'),
     [props.location.pathname],
   );
+
+  // const [searchBy] = React.useState('title');
+
+  const onSearchChange = (value: string) => {
+    dispatch(push(`?searchBy=${'title'}&search=${value}`));
+  };
 
   return (
     <>
@@ -65,7 +79,11 @@ function Home(props: RouteComponentProps<RouteParams>) {
 
         <Switch>
           <Route exact path="/movie/:id" component={MoviePage} />
-          <Route component={MovieSearch} />
+          <Route
+            component={() => (
+              <MovieSearch value={search} onSearchChange={onSearchChange} />
+            )}
+          />
         </Switch>
       </Topbar>
 
