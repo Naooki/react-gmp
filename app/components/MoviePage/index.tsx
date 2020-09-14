@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styles/styled-components';
+import { useSelector } from 'react-redux';
 
-import { Movie } from 'entities/Movie';
+import { makeSelectSelectedMovie } from 'containers/Movies/selectors';
 
 const Article = styled.article`
   display: grid;
@@ -61,13 +62,8 @@ interface Props
   extends RouteComponentProps<RouteParams>,
     React.Props<RouteParams> {}
 
-const MoviePage = (props: Props) => {
-  const { id } = props.match.params;
-  console.log(id);
-
-  // MOCK: fetch movie here
-  // const movie = moviesData.find(m => m.id === id) as Movie;
-  const movie = {} as Movie;
+const MoviePage = () => {
+  const movie = useSelector(makeSelectSelectedMovie());
 
   const rating = React.useMemo(() => movie.vote_average.toPrecision(2), [
     movie.vote_average,

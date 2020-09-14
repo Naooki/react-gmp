@@ -9,4 +9,7 @@ const selectMoviesDomain = (state: ApplicationRootState) =>
 const makeSelectMovieItems = () =>
   createSelector(selectMoviesDomain, substate => substate.items);
 
-export { makeSelectMovieItems };
+const makeSelectSelectedMovie = () =>
+  createSelector(selectMoviesDomain, substate => substate.selectedItem);
+
+export { makeSelectMovieItems, makeSelectSelectedMovie };

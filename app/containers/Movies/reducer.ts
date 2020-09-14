@@ -3,6 +3,7 @@ import { ContainerState, ContainerActions } from './types';
 
 export const initialState: ContainerState = {
   items: null,
+  selectedItem: null,
 };
 
 function moviesReducer(
@@ -12,6 +13,7 @@ function moviesReducer(
   switch (action.type) {
     case ActionTypes.GET_MOVIES_SUCCESS:
       return {
+        ...state,
         items: action.payload.movies,
       };
     default:

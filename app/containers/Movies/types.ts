@@ -6,6 +6,7 @@ import * as actions from './actions';
 /* --- STATE --- */
 interface MoviesState {
   readonly items: Movie[] | null;
+  selectedItem: Movie | null;
 }
 
 /* --- ACTIONS --- */
