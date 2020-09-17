@@ -4,9 +4,15 @@ import { ajax } from 'rxjs/ajax';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { stringify } from 'query-string';
 
+import { Movie } from 'entities/Movie';
 import MoviesResponse from 'entities/MoviesResponse';
 import BadRequestError from 'entities/BadRequestError';
-import { getMoviesSuccess, getMoviesFailure } from './actions';
+import {
+  getMoviesSuccess,
+  getMoviesFailure,
+  getMovieByIdSuccess,
+  getMovieByIdFailure,
+} from './actions';
 import ActionTypes from './constants';
 
 const API_URL = 'http://localhost:4000';
@@ -23,4 +29,16 @@ const getMoviesEpic: Epic = action$ =>
     ),
   );
 
-export { getMoviesEpic };
+const getMovieByIdEpic: Epic = action$ =>
+  action$.pipe(
+    ofType(ActionTypes.GET_MOVIE_BY_ID),
+    map(action => action.payload.id),
+    switchMap(id =>
+      ajax.getJSON<Movie>(`${API_URL}/movies/${id}`).pipe(
+        map(response => getMovieByIdSuccess(response)),
+        catchError((err: BadRequestError) => of(getMovieByIdFailure(err))),
+      ),
+    ),
+  );
+
+export { getMoviesEpic, getMovieByIdEpic };

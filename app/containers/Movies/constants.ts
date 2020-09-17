@@ -2,6 +2,9 @@ enum ActionTypes {
   GET_MOVIES = 'app/Movies/GET_PRODUCTS',
   GET_MOVIES_SUCCESS = 'app/Movies/GET_MOVIES_SUCCESS',
   GET_MOVIES_FAILURE = 'app/Movies/GET_MOVIES_FAILURE',
+  GET_MOVIE_BY_ID = 'app/Movies/GET_MOVIE_BY_ID',
+  GET_MOVIE_BY_ID_SUCCESS = 'app/Movies/GET_MOVIE_BY_ID_SUCCESS',
+  GET_MOVIE_BY_ID_FAILURE = 'app/Movies/GET_MOVIE_BY_ID_FAILURE',
 }
 
 export default ActionTypes;

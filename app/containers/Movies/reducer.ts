@@ -16,6 +16,18 @@ function moviesReducer(
         ...state,
         items: action.payload.movies,
       };
+
+    case ActionTypes.GET_MOVIE_BY_ID:
+      return {
+        ...state,
+        selectedItem: null,
+      };
+
+    case ActionTypes.GET_MOVIE_BY_ID_SUCCESS:
+      return {
+        ...state,
+        selectedItem: action.payload.movie,
+      };
     default:
       return state;
   }

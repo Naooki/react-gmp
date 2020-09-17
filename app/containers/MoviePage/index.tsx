@@ -1,13 +1,27 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styles/styled-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import { makeSelectSelectedMovie } from 'containers/Movies/selectors';
+import { getMovieById } from 'containers/Movies/actions';
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  height: 65vh;
+  font-size: 6rem;
+  color: ${props => props.theme.primary};
+
+  > .loader-icon {
+    margin: auto;
+  }
+`;
 
 const Article = styled.article`
   display: grid;
-  grid-template: minmax(0, 70vh) / 1fr 3fr;
+  grid-template: minmax(0, auto) / 1fr 3fr;
   grid-gap: 5rem;
   color: ${props => props.theme.text};
 
@@ -54,26 +68,25 @@ const MovieParagraph = styled.p`
   overflow-y: auto;
 `;
 
-type RouteParams = {
-  id: string; // /movie/:id
-};
-
-interface Props
-  extends RouteComponentProps<RouteParams>,
-    React.Props<RouteParams> {}
-
 const MoviePage = () => {
+  const dispatch = useDispatch();
+  const { id } = useParams() as { id: string };
+
+  React.useEffect(() => {
+    dispatch(getMovieById(id));
+  }, [dispatch, id]);
+
   const movie = useSelector(makeSelectSelectedMovie());
 
-  const rating = React.useMemo(() => movie.vote_average.toPrecision(2), [
-    movie.vote_average,
+  const rating = React.useMemo(() => movie?.vote_average.toPrecision(2), [
+    movie,
   ]);
-  const genres = React.useMemo(() => movie.genres.join(', '), [movie.genres]);
-  const releaseYear = React.useMemo(() => movie.release_date.slice(0, 4), [
-    movie.release_date,
+  const genres = React.useMemo(() => movie?.genres.join(', '), [movie]);
+  const releaseYear = React.useMemo(() => movie?.release_date.slice(0, 4), [
+    movie,
   ]);
 
-  return (
+  return movie ? (
     <Article>
       <aside>
         <img
@@ -95,6 +108,10 @@ const MoviePage = () => {
         <MovieParagraph>{movie.overview}</MovieParagraph>
       </MovieDescription>
     </Article>
+  ) : (
+    <LoaderWrapper>
+      <FontAwesomeIcon className="loader-icon" icon={faSpinner} spin />
+    </LoaderWrapper>
   );
 };
 

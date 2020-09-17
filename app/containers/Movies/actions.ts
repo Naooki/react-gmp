@@ -28,3 +28,13 @@ export const getMoviesSuccess = (movies: Movie[]) =>
 
 export const getMoviesFailure = (error: BadRequestError) =>
   action(ActionTypes.GET_MOVIES_FAILURE, error);
+
+export const getMovieById = (id: string) => {
+  return action(ActionTypes.GET_MOVIE_BY_ID, { id });
+};
+
+export const getMovieByIdSuccess = (movie: Movie) =>
+  action(ActionTypes.GET_MOVIE_BY_ID_SUCCESS, { movie });
+
+export const getMovieByIdFailure = (error: BadRequestError) =>
+  action(ActionTypes.GET_MOVIE_BY_ID_FAILURE, error);
