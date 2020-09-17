@@ -4,7 +4,7 @@ import styled from 'styles/styled-components';
 import { Movie } from 'entities/Movie';
 import MovieGenre from 'entities/MovieGenre';
 import Button, { ButtonVariant } from 'components/Button';
-import ModalActions from 'components/Modal/ModalActions';
+import ModalButtons from 'containers/Modal/ModalButtons';
 import TextControl from './TextControl';
 import DateControl from './DateControl';
 import NumberControl from './NumberControl';
@@ -103,14 +103,14 @@ function MovieForm(props: Props) {
         onChange={value => updateMovie('runtime', value)}
       />
 
-      <ModalActions>
+      <ModalButtons>
         <Button className={ButtonVariant.Outlined} type="reset">
           reset
         </Button>
         <Button className={ButtonVariant.Contained} type="submit">
           submit
         </Button>
-      </ModalActions>
+      </ModalButtons>
     </Form>
   );
 }

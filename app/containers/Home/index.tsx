@@ -16,7 +16,7 @@ import MoviePage from 'containers/MoviePage';
 import MovieSearch from 'components/MovieSearch';
 import Footer from 'components/Footer';
 import IconLink from 'components/IconLink';
-import Modal from 'components/Modal';
+import Modal from 'containers/Modal';
 import AddMovie from 'containers/AddMovie';
 import { ButtonVariant } from 'components/Button';
 

@@ -2,8 +2,8 @@ import * as React from 'react';
 import styled from 'styles/styled-components';
 
 import Button, { ButtonVariant } from 'components/Button';
-import ModalHeading from 'components/Modal/ModalHeading';
-import ModalActions from 'components/Modal/ModalActions';
+import ModalHeading from 'containers/Modal/ModalHeading';
+import ModalButtons from 'containers/Modal/ModalButtons';
 
 interface Props {
   heading: string;
@@ -22,7 +22,7 @@ function Confirmation(props: Props) {
     <>
       <ModalHeading>{props.heading}</ModalHeading>
       <ConfirmationText>{props.text}</ConfirmationText>
-      <ModalActions>
+      <ModalButtons>
         <Button
           className={ButtonVariant.Contained}
           type="button"
@@ -30,7 +30,7 @@ function Confirmation(props: Props) {
         >
           confirm
         </Button>
-      </ModalActions>
+      </ModalButtons>
     </>
   );
 }

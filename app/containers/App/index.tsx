@@ -5,7 +5,7 @@ import Login from 'containers/Login';
 import Home from 'containers/Home';
 import NotFoundPage from 'containers/NotFoundPage';
 import GlobalStyle from 'global-styles';
-import { ModalProvider } from 'components/Modal';
+import { ModalProvider } from 'containers/Modal';
 
 function App() {
   return (

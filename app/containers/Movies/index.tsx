@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { parse } from 'query-string';
 import { push } from 'connected-react-router';
 
-import Modal from 'components/Modal';
+import Modal from 'containers/Modal';
 import Confirmation from 'components/Confirmation';
 import EditMovie from 'containers/EditMovie';
 import { Movie } from 'entities/Movie';
