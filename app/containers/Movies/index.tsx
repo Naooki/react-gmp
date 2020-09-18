@@ -5,10 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { parse } from 'query-string';
 import { push } from 'connected-react-router';
 
-import Modal from 'containers/Modal';
-import Confirmation from 'components/Confirmation';
-import EditMovie from 'containers/EditMovie';
-import { Movie } from 'entities/Movie';
+import { openModal } from 'containers/Modal/actions';
+import { ModalTypes } from 'containers/Modal/constants';
 import MovieList from 'components/MovieList';
 import SortBy, { SortType } from 'components/SortBy';
 import Tabs from 'components/Tabs';
@@ -74,72 +72,49 @@ const Movies = () => {
     }
   };
 
-  const [modalContent, toggleModal] = React.useState<React.ReactNode>(null);
-
-  const onMovieEdit = React.useCallback(async (id: number) => {
-    // MOCK: fetch movie by id
-    const movie = { id } as Movie;
-
-    const editMovie = (
-      <Modal onClose={() => toggleModal(null)}>
-        <EditMovie movie={movie} />
-      </Modal>
-    );
-
-    toggleModal(editMovie);
-  }, []);
-
-  const deleteMovie = React.useCallback(async (movieId: number) => {
-    // MOCK: Delete Api call
-    console.log(`Delete movie with id: ${movieId}`);
-    await Promise.resolve(movieId);
-    toggleModal(null);
-  }, []);
+  const onMovieEdit = React.useCallback(
+    (id: number) => {
+      const modalType = ModalTypes.EDIT_MOVIE;
+      const modalProps = { id };
+      dispatch(openModal({ modalType, modalProps }));
+    },
+    [dispatch],
+  );
 
   const onMovieDelete = React.useCallback(
     (id: number) => {
-      const heading = 'delete movie';
-      const text = 'Are you sure you want to delete this movie?';
+      const modalType = ModalTypes.CONFIRMATION;
+      const modalProps = {
+        id,
+        heading: 'delete movie',
+        text: 'Are you sure you want to delete this movie?',
+      };
 
-      const deleteMovieConfirmation = (
-        <Modal onClose={() => toggleModal(null)}>
-          <Confirmation
-            heading={heading}
-            text={text}
-            onConfirm={() => deleteMovie(id)}
-          />
-        </Modal>
-      );
-
-      toggleModal(deleteMovieConfirmation);
+      dispatch(openModal({ modalType, modalProps }));
     },
-    [deleteMovie],
+    [dispatch],
   );
 
   return (
-    <>
-      <Main>
-        <MovieListControls>
-          <Tabs tabs={tabs} activeTab={activeTab} tabChange={activeTabChange} />
-          <SortControls>
-            <span className="label">sort by</span>
-            <SortBy label="release date" orderChange={releaseDateOrderChange} />
-          </SortControls>
-        </MovieListControls>
-        {movies ? (
-          <MovieList
-            movies={movies}
-            onMovieClick={id => dispatch(push(`/movie/${id}`))}
-            onMovieEdit={onMovieEdit}
-            onMovieDelete={onMovieDelete}
-          />
-        ) : (
-          <div>loading...</div>
-        )}
-      </Main>
-
-      {modalContent}
-    </>
+    <Main>
+      <MovieListControls>
+        <Tabs tabs={tabs} activeTab={activeTab} tabChange={activeTabChange} />
+        <SortControls>
+          <span className="label">sort by</span>
+          <SortBy label="release date" orderChange={releaseDateOrderChange} />
+        </SortControls>
+      </MovieListControls>
+      {movies ? (
+        <MovieList
+          movies={movies}
+          onMovieClick={id => dispatch(push(`/movie/${id}`))}
+          onMovieEdit={onMovieEdit}
+          onMovieDelete={onMovieDelete}
+        />
+      ) : (
+        <div>loading...</div>
+      )}
+    </Main>
   );
 };
 

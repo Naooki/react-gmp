@@ -1,18 +1,28 @@
 import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { Movie } from 'entities/Movie';
 import MovieForm from 'components/MovieForm';
 import ModalHeading from 'containers/Modal/ModalHeading';
+import { getMovieById } from 'containers/Movies/actions';
+import { makeSelectSelectedMovie } from 'containers/Movies/selectors';
 
 interface Props {
-  movie: Movie;
+  id: number;
 }
 
 function EditMovie(props: Props) {
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(getMovieById(`${props.id}`));
+  }, [dispatch, props.id]);
+
+  const movie = useSelector(makeSelectSelectedMovie());
+
   return (
     <>
       <ModalHeading>edit movie</ModalHeading>
-      <MovieForm movie={props.movie} />
+      {movie ? <MovieForm movie={movie} /> : <div>loading...</div>}
     </>
   );
 }

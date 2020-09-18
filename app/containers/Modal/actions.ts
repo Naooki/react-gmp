@@ -4,7 +4,7 @@ import ActionTypes, { ModalTypes } from './constants';
 
 export const openModal = (modalState: {
   modalType: ModalTypes;
-  modalProps: { [key: string]: string };
+  modalProps: { [key: string]: string | number };
 }) => action(ActionTypes.OPEN_MODAL, modalState);
 
 export const closeModal = () => action(ActionTypes.CLOSE_MODAL);

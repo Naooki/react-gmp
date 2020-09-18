@@ -16,9 +16,9 @@ import MoviePage from 'containers/MoviePage';
 import MovieSearch from 'components/MovieSearch';
 import Footer from 'components/Footer';
 import IconLink from 'components/IconLink';
-import Modal from 'containers/Modal';
-import AddMovie from 'containers/AddMovie';
 import { ButtonVariant } from 'components/Button';
+import { ModalTypes } from 'containers/Modal/constants';
+import { openModal } from 'containers/Modal/actions';
 
 import AddMovieButton from './AddMovieButton';
 import Topbar from './Topbar';
@@ -30,7 +30,6 @@ type RouteParams = {
 };
 
 function Home(props: RouteComponentProps<RouteParams>) {
-  const [showModal, toggleModal] = React.useState(false);
   const [search, setSearch] = React.useState(() => {
     const queryParams = parse(props.location.search);
     return (queryParams.search as string) || '';
@@ -42,12 +41,16 @@ function Home(props: RouteComponentProps<RouteParams>) {
     [props.location.pathname],
   );
 
-  // const [searchBy] = React.useState('title');
-
   const onSearchChange = (value: string) => {
     setSearch(value);
     dispatch(push(value ? `?searchBy=${'title'}&search=${value}` : ''));
   };
+
+  const addMovieClick = React.useCallback(() => {
+    const modalType = ModalTypes.ADD_MOVIE;
+    const modalProps = {};
+    dispatch(openModal({ modalType, modalProps }));
+  }, [dispatch]);
 
   return (
     <>
@@ -69,7 +72,7 @@ function Home(props: RouteComponentProps<RouteParams>) {
                 <AddMovieButton
                   className={ButtonVariant.Default}
                   type="button"
-                  onClick={() => toggleModal(true)}
+                  onClick={addMovieClick}
                 >
                   + Add Movie
                 </AddMovieButton>
@@ -93,12 +96,6 @@ function Home(props: RouteComponentProps<RouteParams>) {
       <Footer>
         <Logo>netflixRoulette</Logo>
       </Footer>
-
-      {showModal && (
-        <Modal onClose={() => toggleModal(false)}>
-          <AddMovie />
-        </Modal>
-      )}
     </>
   );
 }

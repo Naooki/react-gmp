@@ -6,7 +6,7 @@ import { ModalTypes } from './constants';
 /* --- STATE --- */
 interface ModalState {
   modalType: ModalTypes | null;
-  modalProps: { [key: string]: string };
+  modalProps: { [key: string]: string | number };
 }
 
 /* --- ACTIONS --- */
