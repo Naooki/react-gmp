@@ -1,13 +1,15 @@
 import * as React from 'react';
-import ReactDOM from 'react-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styles/styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
-const Container = styled.div`
-  position: relative;
-  z-index: 0;
-`;
+import AddMovie from 'containers/AddMovie';
+import EditMovie from 'containers/EditMovie';
+import Confirmation from 'components/Confirmation';
+import { ModalTypes } from './constants';
+import { makeSelectModalProps, makeSelectModalType } from './selectors';
+import { closeModal } from './actions';
 
 const Overlay = styled.div`
   position: fixed;
@@ -55,53 +57,39 @@ const ModalMain = styled.main`
   overflow: auto;
 `;
 
-const mockDiv = document.createElement('div');
-mockDiv.classList.add('modal-container');
-const Context = React.createContext(mockDiv);
+const ModalComponents: { [key in ModalTypes]: React.ReactNode } = {
+  [ModalTypes.ADD_MOVIE]: AddMovie,
+  [ModalTypes.EDIT_MOVIE]: EditMovie,
+  [ModalTypes.CONFIRMATION]: Confirmation,
+};
 
-export function ModalProvider({ children }: { children: React.ReactNode }) {
-  const modalRef = React.useRef<HTMLDivElement>(null);
-  const [context, setContext] = React.useState<HTMLDivElement>(mockDiv);
+const Modal = () => {
+  const dispatch = useDispatch();
+  const modalType = useSelector(makeSelectModalType());
+  const modalProps = useSelector(makeSelectModalProps());
 
-  // make sure re-render is triggered after initial
-  // render so that modalRef exists
-  React.useEffect(() => {
-    if (modalRef.current) {
-      setContext(modalRef.current);
-    }
-  }, []);
+  const ModalView = (typeof modalType === 'number'
+    ? ModalComponents[modalType]
+    : null) as typeof React.Component;
 
-  return (
-    <Container>
-      <Context.Provider value={context}>{children}</Context.Provider>
-      <div ref={modalRef} />
-    </Container>
-  );
-}
+  const onCloseClick = React.useCallback(() => {
+    dispatch(closeModal());
+  }, [dispatch]);
 
-interface Props {
-  children: React.ReactNode;
-  onClose: () => void;
-}
-
-const Modal = (props: Props) => {
-  const modalNode = React.useContext(Context);
-
-  return modalNode
-    ? ReactDOM.createPortal(
-        <Overlay>
-          <Dialog>
-            <ModalHeader>
-              <ModalCloseBtn onClick={props.onClose}>
-                <FontAwesomeIcon icon={faTimes} />
-              </ModalCloseBtn>
-            </ModalHeader>
-            <ModalMain>{props.children}</ModalMain>
-          </Dialog>
-        </Overlay>,
-        modalNode,
-      )
-    : null;
+  return ModalView ? (
+    <Overlay>
+      <Dialog>
+        <ModalHeader>
+          <ModalCloseBtn onClick={onCloseClick}>
+            <FontAwesomeIcon icon={faTimes} />
+          </ModalCloseBtn>
+        </ModalHeader>
+        <ModalMain>
+          <ModalView {...modalProps} />
+        </ModalMain>
+      </Dialog>
+    </Overlay>
+  ) : null;
 };
 
 export default Modal;
