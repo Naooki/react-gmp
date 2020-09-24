@@ -5,7 +5,6 @@ import {
   matchPath,
   RouteComponentProps,
 } from 'react-router-dom';
-import { push } from 'connected-react-router';
 import { useDispatch } from 'react-redux';
 import { parse } from 'query-string';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,6 +18,7 @@ import IconLink from 'components/IconLink';
 import { ButtonVariant } from 'components/Button';
 import { ModalTypes } from 'containers/Modal/constants';
 import { openModal } from 'containers/Modal/actions';
+import { movieSearchChange } from 'containers/Movies/actions';
 
 import AddMovieButton from './AddMovieButton';
 import Topbar from './Topbar';
@@ -29,8 +29,11 @@ type RouteParams = {
   id: string;
 };
 
+// TEMP: Only search by title now
+const searchBy = 'title';
+
 function Home(props: RouteComponentProps<RouteParams>) {
-  const [search, setSearch] = React.useState(() => {
+  const [searchStr, setSearch] = React.useState(() => {
     const queryParams = parse(props.location.search);
     return (queryParams.search as string) || '';
   });
@@ -41,9 +44,9 @@ function Home(props: RouteComponentProps<RouteParams>) {
     [props.location.pathname],
   );
 
-  const onSearchChange = (value: string) => {
-    setSearch(value);
-    dispatch(push(value ? `?searchBy=${'title'}&search=${value}` : ''));
+  const onSearchChange = (search: string) => {
+    setSearch(search);
+    dispatch(movieSearchChange(search ? { searchBy, search } : {}));
   };
 
   const addMovieClick = React.useCallback(() => {
@@ -85,7 +88,7 @@ function Home(props: RouteComponentProps<RouteParams>) {
           <Route exact path="/movie/:id" component={MoviePage} />
           <Route
             component={() => (
-              <MovieSearch value={search} onSearchChange={onSearchChange} />
+              <MovieSearch value={searchStr} onSearchChange={onSearchChange} />
             )}
           />
         </Switch>

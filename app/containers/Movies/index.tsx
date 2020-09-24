@@ -2,7 +2,6 @@ import * as React from 'react';
 import styled from 'styles/styled-components';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { parse } from 'query-string';
 import { push } from 'connected-react-router';
 
 import { openModal } from 'containers/Modal/actions';
@@ -12,7 +11,7 @@ import MovieList from 'components/MovieList';
 import SortBy, { SortType } from 'components/SortBy';
 import Tabs from 'components/Tabs';
 import { makeSelectMovieItems } from './selectors';
-import { deleteMovie, getMovies } from './actions';
+import { deleteMovie, getMovies, movieSortChange } from './actions';
 
 const Main = styled.main`
   display: flex;
@@ -59,26 +58,24 @@ const Movies = () => {
 
   const movies = useSelector(makeSelectMovieItems());
   const dispatch = useDispatch();
-  const [searchBy, search] = React.useMemo(() => {
-    const params = parse(location.search);
-    return [params.searchBy as 'title' | 'genres', params.search as string];
-  }, [location.search]);
-  const [sortBy] = React.useState<'release_date'>('release_date');
-  const [sortOrder, setSortOrder] = React.useState<SortType | null>(null);
 
+  // Refetch on query params change
   React.useEffect(() => {
-    dispatch(getMovies(searchBy, search, sortBy, sortOrder));
-  }, [dispatch, searchBy, search, sortBy, sortOrder]);
+    dispatch(getMovies());
+  }, [dispatch, location]);
 
-  const [activeTab, activeTabChange] = React.useState(tabs[0]);
-  const releaseDateOrderChange = (type: SortType) => {
-    switch (type) {
+  const [activeTab, onActiveTabChange] = React.useState(tabs[0]);
+  const onOrderChange = (
+    sortBy: 'release_date' | 'vote_average',
+    sortOrder: SortType,
+  ) => {
+    switch (sortOrder) {
       case SortType.Ascending:
       case SortType.Descending:
-        setSortOrder(type);
+        dispatch(movieSortChange({ sortBy, sortOrder }));
         break;
       default:
-        setSortOrder(null);
+        dispatch(movieSortChange({}));
     }
   };
 
@@ -109,10 +106,13 @@ const Movies = () => {
   return (
     <Main>
       <MovieListControls>
-        <Tabs tabs={tabs} activeTab={activeTab} tabChange={activeTabChange} />
+        <Tabs tabs={tabs} activeTab={activeTab} tabChange={onActiveTabChange} />
         <SortControls>
           <span className="label">sort by</span>
-          <SortBy label="release date" orderChange={releaseDateOrderChange} />
+          <SortBy
+            label="release date"
+            orderChange={type => onOrderChange('release_date', type)}
+          />
         </SortControls>
       </MovieListControls>
       {movies ? (
