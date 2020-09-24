@@ -1,7 +1,7 @@
 import { Epic, ofType } from 'redux-observable';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { switchMap, map, catchError, mapTo } from 'rxjs/operators';
 import { stringify } from 'query-string';
 
 import { Movie } from 'entities/Movie';
@@ -12,6 +12,8 @@ import {
   getMoviesFailure,
   getMovieByIdSuccess,
   getMovieByIdFailure,
+  deleteMovieSuccess,
+  deleteMovieFailure,
 } from './actions';
 import ActionTypes from './constants';
 
@@ -41,4 +43,16 @@ const getMovieByIdEpic: Epic = action$ =>
     ),
   );
 
-export { getMoviesEpic, getMovieByIdEpic };
+const deleteMovieEpic: Epic = action$ =>
+  action$.pipe(
+    ofType(ActionTypes.DELETE_MOVIE),
+    map(action => action.payload.id),
+    switchMap(id =>
+      ajax.delete(`${API_URL}/movies/${id}`).pipe(
+        mapTo(deleteMovieSuccess()),
+        catchError((err: BadRequestError) => of(deleteMovieFailure(err))),
+      ),
+    ),
+  );
+
+export default [getMoviesEpic, getMovieByIdEpic, deleteMovieEpic];

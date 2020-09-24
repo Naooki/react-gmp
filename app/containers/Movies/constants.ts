@@ -5,6 +5,9 @@ enum ActionTypes {
   GET_MOVIE_BY_ID = 'app/Movies/GET_MOVIE_BY_ID',
   GET_MOVIE_BY_ID_SUCCESS = 'app/Movies/GET_MOVIE_BY_ID_SUCCESS',
   GET_MOVIE_BY_ID_FAILURE = 'app/Movies/GET_MOVIE_BY_ID_FAILURE',
+  DELETE_MOVIE = 'app/Movies/DELETE_MOVIE',
+  DELETE_MOVIE_SUCCESS = 'app/Movies/DELETE_MOVIE_SUCCESS',
+  DELETE_MOVIE_FAILURE = 'app/Movies/DELETE_MOVIE_FAILURE',
 }
 
 export default ActionTypes;

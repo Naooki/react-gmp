@@ -11,7 +11,7 @@ import MovieList from 'components/MovieList';
 import SortBy, { SortType } from 'components/SortBy';
 import Tabs from 'components/Tabs';
 import { makeSelectMovieItems } from './selectors';
-import { getMovies } from './actions';
+import { deleteMovie, getMovies } from './actions';
 
 const Main = styled.main`
   flex-grow: 1;
@@ -75,7 +75,7 @@ const Movies = () => {
   const onMovieEdit = React.useCallback(
     (id: number) => {
       const modalType = ModalTypes.EDIT_MOVIE;
-      const modalProps = { id };
+      const modalProps = { id, loading: true };
       dispatch(openModal({ modalType, modalProps }));
     },
     [dispatch],
@@ -85,9 +85,10 @@ const Movies = () => {
     (id: number) => {
       const modalType = ModalTypes.CONFIRMATION;
       const modalProps = {
-        id,
         heading: 'delete movie',
         text: 'Are you sure you want to delete this movie?',
+        loading: false,
+        onConfirm: () => dispatch(deleteMovie(id.toString())),
       };
 
       dispatch(openModal({ modalType, modalProps }));

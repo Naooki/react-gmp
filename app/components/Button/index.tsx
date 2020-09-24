@@ -5,7 +5,11 @@ export enum ButtonVariant {
   Default = 'default',
   Contained = 'contained',
   Outlined = 'outlined',
+  Disabled = 'disabled',
 }
+
+const disabledFontColor = 'rgba(255, 255, 255, 0.3)';
+const disabledBackgroundColor = 'rgba(255, 255, 255, 0.12)';
 
 const Button = styled.button`
   padding: 0.5rem;
@@ -39,6 +43,17 @@ const Button = styled.button`
       color: ${props => darken(0.05, props.theme.primary)};
       border-color: ${props => darken(0.05, props.theme.primary)};
       background: ${props => transparentize(0.95, props.theme.primary)};
+    }
+  }
+
+  &.${ButtonVariant.Disabled} {
+    color: ${disabledFontColor};
+    background: ${disabledBackgroundColor};
+    cursor: auto;
+    &:hover,
+    &:focus {
+      color: ${disabledFontColor};
+      background: ${disabledBackgroundColor};
     }
   }
 `;

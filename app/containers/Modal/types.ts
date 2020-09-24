@@ -1,12 +1,12 @@
 import { ActionType } from 'typesafe-actions';
 
 import * as actions from './actions';
-import { ModalTypes } from './constants';
+import { ModalProps, ModalTypes } from './constants';
 
 /* --- STATE --- */
 interface ModalState {
   modalType: ModalTypes | null;
-  modalProps: { [key: string]: string | number };
+  modalProps: ModalProps | null;
 }
 
 /* --- ACTIONS --- */

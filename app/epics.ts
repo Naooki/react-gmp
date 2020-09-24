@@ -1,9 +1,10 @@
-import { combineEpics } from 'redux-observable';
+import { combineEpics, Epic } from 'redux-observable';
 
-import { getMovieByIdEpic, getMoviesEpic } from 'containers/Movies/epic';
+import MoviesEpics from 'containers/Movies/epic';
+import ModalEpics from 'containers/Modal/epic';
+
+const epics: ReadonlyArray<Epic> = [...MoviesEpics, ...ModalEpics];
 
 export default function createEpic() {
-  const rootEpic = combineEpics(getMoviesEpic, getMovieByIdEpic);
-
-  return rootEpic;
+  return combineEpics(...epics);
 }

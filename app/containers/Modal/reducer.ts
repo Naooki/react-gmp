@@ -3,7 +3,9 @@ import { ContainerState, ContainerActions } from './types';
 
 export const initialState: ContainerState = {
   modalType: null,
-  modalProps: {},
+  modalProps: {
+    loading: false,
+  },
 };
 
 function modalReducer(
@@ -13,7 +15,17 @@ function modalReducer(
   switch (action.type) {
     case ActionTypes.OPEN_MODAL:
       return {
+        ...state,
         ...action.payload,
+      };
+
+    case ActionTypes.TOGGLE_LOADING:
+      return {
+        ...state,
+        modalProps: {
+          ...state.modalProps,
+          loading: action.payload.loading,
+        },
       };
 
     case ActionTypes.CLOSE_MODAL:

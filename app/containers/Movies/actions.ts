@@ -29,12 +29,20 @@ export const getMoviesSuccess = (movies: Movie[]) =>
 export const getMoviesFailure = (error: BadRequestError) =>
   action(ActionTypes.GET_MOVIES_FAILURE, error);
 
-export const getMovieById = (id: string) => {
-  return action(ActionTypes.GET_MOVIE_BY_ID, { id });
-};
+export const getMovieById = (id: string) =>
+  action(ActionTypes.GET_MOVIE_BY_ID, { id });
 
 export const getMovieByIdSuccess = (movie: Movie) =>
   action(ActionTypes.GET_MOVIE_BY_ID_SUCCESS, { movie });
 
 export const getMovieByIdFailure = (error: BadRequestError) =>
   action(ActionTypes.GET_MOVIE_BY_ID_FAILURE, error);
+
+export const deleteMovie = (id: string) =>
+  action(ActionTypes.DELETE_MOVIE, { id });
+
+export const deleteMovieSuccess = () =>
+  action(ActionTypes.DELETE_MOVIE_SUCCESS);
+
+export const deleteMovieFailure = (error: BadRequestError) =>
+  action(ActionTypes.DELETE_MOVIE_FAILURE, error);
