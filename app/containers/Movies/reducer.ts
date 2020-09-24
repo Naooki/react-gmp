@@ -11,6 +11,12 @@ function moviesReducer(
   action: ContainerActions,
 ): ContainerState {
   switch (action.type) {
+    case ActionTypes.GET_MOVIES:
+      return {
+        ...state,
+        items: null,
+      };
+
     case ActionTypes.GET_MOVIES_SUCCESS:
       return {
         ...state,

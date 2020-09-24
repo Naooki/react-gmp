@@ -7,6 +7,7 @@ import { push } from 'connected-react-router';
 
 import { openModal } from 'containers/Modal/actions';
 import { ModalTypes } from 'containers/Modal/constants';
+import Loader from 'components/Loader';
 import MovieList from 'components/MovieList';
 import SortBy, { SortType } from 'components/SortBy';
 import Tabs from 'components/Tabs';
@@ -14,9 +15,18 @@ import { makeSelectMovieItems } from './selectors';
 import { deleteMovie, getMovies } from './actions';
 
 const Main = styled.main`
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   padding: 0 3rem 2rem;
   background: ${props => props.theme.componentBackground};
+`;
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
 `;
 
 const MovieListControls = styled.div`
@@ -113,7 +123,9 @@ const Movies = () => {
           onMovieDelete={onMovieDelete}
         />
       ) : (
-        <div>loading...</div>
+        <LoaderWrapper>
+          <Loader />
+        </LoaderWrapper>
       )}
     </Main>
   );

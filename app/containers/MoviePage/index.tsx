@@ -2,21 +2,13 @@ import * as React from 'react';
 import styled from 'styles/styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import { makeSelectSelectedMovie } from 'containers/Movies/selectors';
 import { getMovieById } from 'containers/Movies/actions';
+import Loader from 'components/Loader';
 
 const LoaderWrapper = styled.div`
-  display: flex;
   height: 65vh;
-  font-size: 6rem;
-  color: ${props => props.theme.primary};
-
-  > .loader-icon {
-    margin: auto;
-  }
 `;
 
 const Article = styled.article`
@@ -110,7 +102,7 @@ const MoviePage = () => {
     </Article>
   ) : (
     <LoaderWrapper>
-      <FontAwesomeIcon className="loader-icon" icon={faSpinner} spin />
+      <Loader />
     </LoaderWrapper>
   );
 };

@@ -1,5 +1,5 @@
 enum ActionTypes {
-  GET_MOVIES = 'app/Movies/GET_PRODUCTS',
+  GET_MOVIES = 'app/Movies/GET_MOVIES',
   GET_MOVIES_SUCCESS = 'app/Movies/GET_MOVIES_SUCCESS',
   GET_MOVIES_FAILURE = 'app/Movies/GET_MOVIES_FAILURE',
   GET_MOVIE_BY_ID = 'app/Movies/GET_MOVIE_BY_ID',

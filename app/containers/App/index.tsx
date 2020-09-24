@@ -9,6 +9,9 @@ import GlobalStyle from 'global-styles';
 import Modal from 'containers/Modal';
 
 const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   position: relative;
   z-index: 0;
 `;
