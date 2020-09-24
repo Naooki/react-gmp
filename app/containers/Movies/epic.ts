@@ -9,6 +9,7 @@ import { Movie } from 'entities/Movie';
 import MoviesResponse from 'entities/MoviesResponse';
 import BadRequestError from 'entities/BadRequestError';
 import {
+  getMovies,
   getMoviesSuccess,
   getMoviesFailure,
   getMovieByIdSuccess,
@@ -76,9 +77,16 @@ const deleteMovieEpic: Epic = action$ =>
     ),
   );
 
+const movieSuccessRequestActionTypes: ReadonlyArray<string> = [
+  ActionTypes.DELETE_MOVIE_SUCCESS,
+];
+const refreshMoviesEpic: Epic = action$ =>
+  action$.pipe(ofType(...movieSuccessRequestActionTypes), mapTo(getMovies()));
+
 export default [
   moviesQueryParamsChangeEpic,
   getMoviesEpic,
   getMovieByIdEpic,
   deleteMovieEpic,
+  refreshMoviesEpic,
 ];
