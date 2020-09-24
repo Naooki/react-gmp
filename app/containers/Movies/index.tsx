@@ -62,7 +62,7 @@ const Movies = () => {
   // Refetch on query params change
   React.useEffect(() => {
     dispatch(getMovies());
-  }, [dispatch, location]);
+  }, [dispatch, location.search]);
 
   const [activeTab, onActiveTabChange] = React.useState(tabs[0]);
   const onOrderChange = (
@@ -103,6 +103,18 @@ const Movies = () => {
     [dispatch],
   );
 
+  const onMovieClick = React.useCallback(
+    (id: number) => {
+      dispatch(
+        push({
+          pathname: `/movie/${id}`,
+          search: location.search,
+        }),
+      );
+    },
+    [dispatch, location.search],
+  );
+
   return (
     <Main>
       <MovieListControls>
@@ -118,7 +130,7 @@ const Movies = () => {
       {movies ? (
         <MovieList
           movies={movies}
-          onMovieClick={id => dispatch(push(`/movie/${id}`))}
+          onMovieClick={onMovieClick}
           onMovieEdit={onMovieEdit}
           onMovieDelete={onMovieDelete}
         />
