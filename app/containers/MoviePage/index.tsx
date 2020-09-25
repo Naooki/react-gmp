@@ -41,6 +41,9 @@ const MovieRating = styled.div`
   border: ${props => `1px solid ${props.theme.text}`};
   border-radius: 50%;
   font-size: 2rem;
+  &.missing {
+    color: #f00;
+  }
 `;
 
 const MovieHighlightInfo = styled.div`
@@ -70,10 +73,10 @@ const MoviePage = () => {
 
   const movie = useSelector(makeSelectSelectedMovie());
 
-  const rating = React.useMemo(() => movie?.vote_average.toPrecision(2), [
+  const rating = React.useMemo(() => movie?.vote_average?.toPrecision(2), [
     movie,
   ]);
-  const genres = React.useMemo(() => movie?.genres.join(', '), [movie]);
+  const genres = React.useMemo(() => movie?.genres?.join(', ') || '', [movie]);
   const releaseYear = React.useMemo(() => movie?.release_date.slice(0, 4), [
     movie,
   ]);
@@ -90,7 +93,9 @@ const MoviePage = () => {
       <MovieDescription>
         <header>
           <MovieTitle>{movie.title}</MovieTitle>
-          <MovieRating>{rating}</MovieRating>
+          <MovieRating className={rating ? '' : 'missing'}>
+            {rating || 'NA'}
+          </MovieRating>
           <div>{genres}</div>
         </header>
         <MovieHighlightInfo>

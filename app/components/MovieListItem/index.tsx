@@ -91,8 +91,8 @@ const MovieItemGenres = styled.span`
 
 const MovieListItem = (props: Props) => {
   const releaseYear = props.movie.release_date;
-  const genres = React.useMemo(() => props.movie.genres.join(', '), [
-    props.movie.genres,
+  const genres = React.useMemo(() => props.movie?.genres?.join(', ') || '', [
+    props.movie,
   ]);
 
   const [imageUrl, setImageUrl] = React.useState<string | null>(

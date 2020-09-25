@@ -7,6 +7,7 @@ import { closeModal, toggleLoading } from './actions';
 const toggleLoadingActionTypes: ReadonlyArray<string> = [
   MoviesActionTypes.DELETE_MOVIE,
   MoviesActionTypes.UPDATE_MOVIE,
+  MoviesActionTypes.CREATE_MOVIE,
 ];
 const toggleLoadingEpic: Epic = action$ =>
   action$.pipe(ofType(...toggleLoadingActionTypes), mapTo(toggleLoading(true)));
@@ -14,6 +15,7 @@ const toggleLoadingEpic: Epic = action$ =>
 const toggleLoadedActionTypes: ReadonlyArray<string> = [
   MoviesActionTypes.DELETE_MOVIE_FAILURE,
   MoviesActionTypes.UPDATE_MOVIE_FAILURE,
+  MoviesActionTypes.CREATE_MOVIE_FAILURE,
 ];
 const toggleLoadedEpic: Epic = action$ =>
   action$.pipe(ofType(...toggleLoadedActionTypes), mapTo(toggleLoading(false)));
@@ -21,6 +23,7 @@ const toggleLoadedEpic: Epic = action$ =>
 const closeModalActionTypes: ReadonlyArray<string> = [
   MoviesActionTypes.DELETE_MOVIE_SUCCESS,
   MoviesActionTypes.UPDATE_MOVIE_SUCCESS,
+  MoviesActionTypes.CREATE_MOVIE_SUCCESS,
 ];
 
 const closeModalEpic: Epic = action$ =>

@@ -63,3 +63,12 @@ export const updateMovieSuccess = (movie: Movie) =>
 
 export const updateMovieFailure = (error: BadRequestError) =>
   action(ActionTypes.UPDATE_MOVIE_FAILURE, error);
+
+export const createMovie = (movie: Movie) =>
+  action(ActionTypes.CREATE_MOVIE, movie);
+
+export const createMovieSuccess = (movie: Movie) =>
+  action(ActionTypes.CREATE_MOVIE_SUCCESS, movie);
+
+export const createMovieFailure = (error: BadRequestError) =>
+  action(ActionTypes.CREATE_MOVIE_FAILURE, error);

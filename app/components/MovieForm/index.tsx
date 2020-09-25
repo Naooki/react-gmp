@@ -54,7 +54,7 @@ function MovieForm({ movie, loading, onConfirm }: Props) {
 
   const selectedGenres = formMovie.genres
     ? movieGenreOptions.filter(option =>
-        formMovie.genres.find(genre => genre === option.label),
+        formMovie?.genres?.find(genre => genre === option.label),
       )
     : [];
 
