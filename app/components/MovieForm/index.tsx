@@ -40,7 +40,7 @@ function MovieForm({ movie, loading, onConfirm }: Props) {
   ) => {
     setMovie({
       ...formMovie,
-      [key]: +e.target.value,
+      [key]: key === 'runtime' ? +e.target.value : e.target.value,
     });
   };
 
