@@ -3,26 +3,34 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import MovieForm from 'components/MovieForm';
 import ModalHeading from 'containers/Modal/ModalHeading';
-import { getMovieById } from 'containers/Movies/actions';
-import { makeSelectSelectedMovie } from 'containers/Movies/selectors';
+import { makeSelectMovieById } from 'containers/Movies/selectors';
+import { updateMovie } from 'containers/Movies/actions';
+import { Movie } from 'entities/Movie';
 
 interface Props {
   id: number;
+  loading: boolean;
 }
 
 function EditMovie(props: Props) {
   const dispatch = useDispatch();
+  const movie = useSelector(makeSelectMovieById(props.id)) as Movie;
 
-  React.useEffect(() => {
-    dispatch(getMovieById(`${props.id}`));
-  }, [dispatch, props.id]);
-
-  const movie = useSelector(makeSelectSelectedMovie());
+  const onEditMovie = React.useCallback(
+    (updatedMovie: Movie) => {
+      dispatch(updateMovie(updatedMovie));
+    },
+    [dispatch],
+  );
 
   return (
     <>
       <ModalHeading>edit movie</ModalHeading>
-      {movie ? <MovieForm movie={movie} /> : <div>loading...</div>}
+      <MovieForm
+        movie={movie}
+        onConfirm={onEditMovie}
+        loading={props.loading}
+      />
     </>
   );
 }

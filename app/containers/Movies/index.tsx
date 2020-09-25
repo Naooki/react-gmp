@@ -82,7 +82,7 @@ const Movies = () => {
   const onMovieEdit = React.useCallback(
     (id: number) => {
       const modalType = ModalTypes.EDIT_MOVIE;
-      const modalProps = { id, loading: true };
+      const modalProps = { id };
       dispatch(openModal({ modalType, modalProps }));
     },
     [dispatch],

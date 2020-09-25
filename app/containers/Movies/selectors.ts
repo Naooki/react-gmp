@@ -12,4 +12,9 @@ const makeSelectMovieItems = () =>
 const makeSelectSelectedMovie = () =>
   createSelector(selectMoviesDomain, substate => substate.selectedItem);
 
-export { makeSelectMovieItems, makeSelectSelectedMovie };
+const makeSelectMovieById = (id: number) =>
+  createSelector(selectMoviesDomain, substate =>
+    substate.items?.find(movie => movie.id === id),
+  );
+
+export { makeSelectMovieItems, makeSelectSelectedMovie, makeSelectMovieById };

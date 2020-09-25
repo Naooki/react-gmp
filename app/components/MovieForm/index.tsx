@@ -1,5 +1,7 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import { Movie } from 'entities/Movie';
 import MovieGenre from 'entities/MovieGenre';
@@ -9,10 +11,6 @@ import TextControl from './TextControl';
 import DateControl from './DateControl';
 import NumberControl from './NumberControl';
 import MutliSelectControl from './MultiSelectControl';
-
-interface Props {
-  movie?: Movie;
-}
 
 const Form = styled.form`
   display: flex;
@@ -24,32 +22,57 @@ const movieGenreOptions = Object.keys(MovieGenre).map(id => ({
   label: MovieGenre[id],
 }));
 
-function MovieForm(props: Props) {
-  const [movie, setMovie] = React.useState(props.movie || ({} as Movie));
+type CloneDeep = <T>(value: T) => T;
+const cloneDeep: CloneDeep = obj => JSON.parse(JSON.stringify(obj));
+
+interface Props {
+  movie: Movie;
+  loading: boolean;
+  onConfirm: (movie: Movie) => void;
+}
+
+function MovieForm({ movie, loading, onConfirm }: Props) {
+  const [formMovie, setMovie] = React.useState(() => cloneDeep(movie));
 
   const updateMovie = (
     key: keyof Movie,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setMovie({
-      ...movie,
-      [key]: e.target.value,
+      ...formMovie,
+      [key]: +e.target.value,
     });
   };
 
   const updateMovieGenres = (value: { id: string; label: string }[]) => {
     const genres = value.map(v => v.id as MovieGenre);
     setMovie({
-      ...movie,
+      ...formMovie,
       genres,
     });
   };
 
-  const selectedGenres = movie.genres
+  const selectedGenres = formMovie.genres
     ? movieGenreOptions.filter(option =>
-        movie.genres.find(genre => genre === option.label),
+        formMovie.genres.find(genre => genre === option.label),
       )
     : [];
+
+  const onReset = React.useCallback(
+    e => {
+      e.preventDefault();
+      setMovie(cloneDeep(movie));
+    },
+    [movie],
+  );
+
+  const onSubmit = React.useCallback(
+    e => {
+      e.preventDefault();
+      onConfirm(formMovie);
+    },
+    [formMovie, onConfirm],
+  );
 
   return (
     <Form>
@@ -57,21 +80,21 @@ function MovieForm(props: Props) {
         id="title"
         label="title"
         placeholder="Title here"
-        value={movie.title}
+        value={formMovie.title}
         onChange={value => updateMovie('title', value)}
       />
       <DateControl
         id="releaseDate"
         label="release date"
         placeholder="Select date"
-        value={movie.release_date}
+        value={formMovie.release_date}
         onChange={value => updateMovie('release_date', value)}
       />
       <TextControl
         id="movieUrl"
         label="movie url"
         placeholder="Movie URL here"
-        value={movie.poster_path || ''}
+        value={formMovie.poster_path || ''}
         onChange={value => updateMovie('poster_path', value)}
       />
       {/* <select name="genre" title="genre">
@@ -92,23 +115,42 @@ function MovieForm(props: Props) {
         id="movieOverview"
         label="overview"
         placeholder="Overview here"
-        value={movie.overview || ''}
+        value={formMovie.overview || ''}
         onChange={value => updateMovie('overview', value)}
       />
       <NumberControl
         id="movieRuntime"
         label="runtime"
         placeholder="Runtime here"
-        value={movie.runtime}
+        value={formMovie.runtime}
         onChange={value => updateMovie('runtime', value)}
       />
 
       <ModalButtons>
-        <Button className={ButtonVariant.Outlined} type="reset">
+        <Button
+          className={loading ? ButtonVariant.Disabled : ButtonVariant.Outlined}
+          type="reset"
+          onClick={onReset}
+          disabled={loading}
+        >
           reset
         </Button>
-        <Button className={ButtonVariant.Contained} type="submit">
-          submit
+        <Button
+          className={loading ? ButtonVariant.Disabled : ButtonVariant.Contained}
+          type="submit"
+          onClick={onSubmit}
+          disabled={loading}
+        >
+          {loading ? (
+            <FontAwesomeIcon
+              className="loader-icon"
+              size="2x"
+              icon={faSpinner}
+              spin
+            />
+          ) : (
+            'submit'
+          )}
         </Button>
       </ModalButtons>
     </Form>

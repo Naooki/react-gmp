@@ -54,3 +54,12 @@ export const deleteMovieSuccess = () =>
 
 export const deleteMovieFailure = (error: BadRequestError) =>
   action(ActionTypes.DELETE_MOVIE_FAILURE, error);
+
+export const updateMovie = (movie: Movie) =>
+  action(ActionTypes.UPDATE_MOVIE, movie);
+
+export const updateMovieSuccess = (movie: Movie) =>
+  action(ActionTypes.UPDATE_MOVIE_SUCCESS, movie);
+
+export const updateMovieFailure = (error: BadRequestError) =>
+  action(ActionTypes.UPDATE_MOVIE_FAILURE, error);

@@ -16,6 +16,8 @@ import {
   getMovieByIdFailure,
   deleteMovieSuccess,
   deleteMovieFailure,
+  updateMovieSuccess,
+  updateMovieFailure,
 } from './actions';
 import ActionTypes from './constants';
 
@@ -77,8 +79,27 @@ const deleteMovieEpic: Epic = action$ =>
     ),
   );
 
+const updateMovieEpic: Epic = action$ =>
+  action$.pipe(
+    ofType(ActionTypes.UPDATE_MOVIE),
+    map(action => action.payload),
+    switchMap(body =>
+      ajax({
+        url: `${API_URL}/movies`,
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+      }).pipe(
+        map(res => res.response),
+        map(movie => updateMovieSuccess(movie)),
+        catchError((err: BadRequestError) => of(updateMovieFailure(err))),
+      ),
+    ),
+  );
+
 const movieSuccessRequestActionTypes: ReadonlyArray<string> = [
   ActionTypes.DELETE_MOVIE_SUCCESS,
+  ActionTypes.UPDATE_MOVIE_SUCCESS,
 ];
 const refreshMoviesEpic: Epic = action$ =>
   action$.pipe(ofType(...movieSuccessRequestActionTypes), mapTo(getMovies()));
@@ -88,5 +109,6 @@ export default [
   getMoviesEpic,
   getMovieByIdEpic,
   deleteMovieEpic,
+  updateMovieEpic,
   refreshMoviesEpic,
 ];
