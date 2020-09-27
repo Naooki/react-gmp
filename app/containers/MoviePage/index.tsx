@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { makeSelectSelectedMovie } from 'containers/Movies/selectors';
 import { getMovieById } from 'containers/Movies/actions';
 import Loader from 'components/Loader';
+import MovieImage from 'components/MovieImage';
 
 const LoaderWrapper = styled.div`
   height: 65vh;
@@ -16,10 +17,6 @@ const Article = styled.article`
   grid-template: minmax(0, auto) / 1fr 3fr;
   grid-gap: 5rem;
   color: ${props => props.theme.text};
-
-  & .movie-poster-image {
-    max-width: 100%;
-  }
 `;
 
 const MovieDescription = styled.section`
@@ -84,11 +81,7 @@ const MoviePage = () => {
   return movie ? (
     <Article>
       <aside>
-        <img
-          src={movie.poster_path}
-          alt="movie poster"
-          className="movie-poster-image"
-        />
+        <MovieImage src={movie.poster_path} alt="movie poster" />
       </aside>
       <MovieDescription>
         <header>

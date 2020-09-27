@@ -4,6 +4,7 @@ import styled from 'styles/styled-components';
 import { Movie } from 'entities/Movie';
 import Menu from 'components/Menu';
 import MenuItem from 'components/Menu/MenuItem';
+import MovieImage from 'components/MovieImage';
 
 interface Props {
   movie: Movie;
@@ -15,6 +16,7 @@ interface Props {
 const MovieItemWrapper = styled.div`
   position: relative;
   width: 300px;
+  margin: 0 auto;
 
   & > .movie-item-menu {
     display: none;
@@ -31,32 +33,6 @@ const MovieItemWrapper = styled.div`
     display: block;
   }
 `;
-
-const MovieImage = styled.img.attrs(props => ({
-  src: props.src,
-  alt: props.alt,
-}))`
-  display: block;
-  width: 100%;
-  height: 400px;
-`;
-
-const NoImageWrapper = styled.div`
-  display: flex;
-  height: 400px;
-  box-sizing: border-box;
-  border: 1px solid ${props => props.theme.text};
-  > h4 {
-    margin: auto;
-    color: ${props => props.theme.text};
-  }
-`;
-
-const NoImage = () => (
-  <NoImageWrapper>
-    <h4>No Image Found</h4>
-  </NoImageWrapper>
-);
 
 const MovieItemDesc = styled.div`
   padding: 0.5rem 0;
@@ -95,14 +71,6 @@ const MovieListItem = (props: Props) => {
     props.movie,
   ]);
 
-  const [imageUrl, setImageUrl] = React.useState<string | null>(
-    () => props.movie.poster_path || null,
-  );
-
-  const onError = () => {
-    setImageUrl(null);
-  };
-
   return (
     <MovieItemWrapper onClick={() => props.onMovieClick(props.movie.id)}>
       <Menu className="movie-item-menu">
@@ -113,11 +81,7 @@ const MovieListItem = (props: Props) => {
           Delete
         </MenuItem>
       </Menu>
-      {imageUrl ? (
-        <MovieImage src={imageUrl} onError={onError} alt="Movie poster" />
-      ) : (
-        <NoImage />
-      )}
+      <MovieImage src={props.movie.poster_path} alt="Movie poster" />
       <MovieItemDesc>
         <MovieItemHeading>{props.movie.title}</MovieItemHeading>
         <MovieItemYear>{releaseYear}</MovieItemYear>
