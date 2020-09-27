@@ -25,9 +25,13 @@ import ActionTypes from './constants';
 
 const API_URL = 'http://localhost:4000';
 
+const moviesQueryParamsChangeActionTypes: ReadonlyArray<string> = [
+  ActionTypes.MOVIES_SEARCH_CHANGE,
+  ActionTypes.MOVIES_SORT_CHANGE,
+];
 const moviesQueryParamsChangeEpic: Epic = (action$, state$) =>
   action$.pipe(
-    ofType(ActionTypes.MOVIES_SORT_CHANGE),
+    ofType(...moviesQueryParamsChangeActionTypes),
     map(action => {
       const params = { ...state$.value.router.location.query };
 

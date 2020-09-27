@@ -3,6 +3,7 @@ import styled from 'styles/styled-components';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'connected-react-router';
+import { parse, stringify } from 'query-string';
 
 import { openModal } from 'containers/Modal/actions';
 import { ModalTypes } from 'containers/Modal/constants';
@@ -46,15 +47,37 @@ const SortControls = styled.div`
 `;
 
 const Movies = () => {
-  const tabs = [
-    { label: 'all' },
-    { label: 'documentary' },
-    { label: 'comedy' },
-    { label: 'horror' },
-    { label: 'crime' },
-  ];
-
   const location = useLocation();
+
+  const tabs = React.useMemo(() => {
+    const params = parse(location.search);
+    delete params.filter;
+
+    return [
+      { label: 'all', path: stringify({ ...params }) },
+      {
+        label: 'documentary',
+        path: stringify({ ...params, filter: 'documentary' }),
+      },
+      {
+        label: 'comedy',
+        path: stringify({ ...params, filter: 'comedy' }),
+      },
+      {
+        label: 'horror',
+        path: stringify({ ...params, filter: 'horror' }),
+      },
+      {
+        label: 'crime',
+        path: stringify({ ...params, filter: 'crime' }),
+      },
+    ];
+  }, [location.search]);
+
+  const activeTab = React.useMemo(
+    () => tabs.find(tab => `?${tab.path}` === location.search) || tabs[0],
+    [tabs, location.search],
+  );
 
   const movies = useSelector(makeSelectMovieItems());
   const dispatch = useDispatch();
@@ -64,7 +87,6 @@ const Movies = () => {
     dispatch(getMovies());
   }, [dispatch, location.search]);
 
-  const [activeTab, onActiveTabChange] = React.useState(tabs[0]);
   const onOrderChange = (
     sortBy: 'release_date' | 'vote_average',
     sortOrder: SortType,
@@ -118,7 +140,7 @@ const Movies = () => {
   return (
     <Main>
       <MovieListControls>
-        <Tabs tabs={tabs} activeTab={activeTab} tabChange={onActiveTabChange} />
+        <Tabs tabs={tabs} activeTab={activeTab} />
         <SortControls>
           <span className="label">sort by</span>
           <SortBy

@@ -16,7 +16,7 @@ interface MovieSortParams {
 }
 
 export const movieSearchChange = (searchParams: MovieSearchParams) =>
-  action(ActionTypes.MOVIES_SORT_CHANGE, {
+  action(ActionTypes.MOVIES_SEARCH_CHANGE, {
     searchBy: null,
     search: null,
     ...searchParams,
