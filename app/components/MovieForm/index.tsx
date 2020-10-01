@@ -1,7 +1,8 @@
 import * as React from 'react';
-import styled from 'styles/styled-components';
+import { Formik, Form } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import styled from 'styles/styled-components';
 
 import { Movie } from 'entities/Movie';
 import MovieGenre from 'entities/MovieGenre';
@@ -12,7 +13,7 @@ import DateControl from './DateControl';
 import NumberControl from './NumberControl';
 import MutliSelectControl from './MultiSelectControl';
 
-const Form = styled.form`
+const WrappedForm = styled(Form)`
   display: flex;
   flex-direction: column;
 `;
@@ -44,20 +45,6 @@ function MovieForm({ movie, loading, onConfirm }: Props) {
     });
   };
 
-  const updateMovieGenres = (value: { id: string; label: string }[]) => {
-    const genres = value.map(v => v.id as MovieGenre);
-    setMovie({
-      ...formMovie,
-      genres,
-    });
-  };
-
-  const selectedGenres = formMovie.genres
-    ? movieGenreOptions.filter(option =>
-        formMovie?.genres?.find(genre => genre === option.label),
-      )
-    : [];
-
   const onReset = React.useCallback(
     e => {
       e.preventDefault();
@@ -66,94 +53,73 @@ function MovieForm({ movie, loading, onConfirm }: Props) {
     [movie],
   );
 
-  const onSubmit = React.useCallback(
-    e => {
-      e.preventDefault();
-      onConfirm(formMovie);
-    },
-    [formMovie, onConfirm],
-  );
+  const onSubmit = React.useCallback(e => onConfirm(e), [onConfirm]);
 
   return (
-    <Form>
-      <TextControl
-        id="title"
-        label="title"
-        placeholder="Title here"
-        value={formMovie.title}
-        onChange={value => updateMovie('title', value)}
-      />
-      <DateControl
-        id="releaseDate"
-        label="release date"
-        placeholder="Select date"
-        value={formMovie.release_date}
-        onChange={value => updateMovie('release_date', value)}
-      />
-      <TextControl
-        id="movieUrl"
-        label="movie url"
-        placeholder="Movie URL here"
-        value={formMovie.poster_path || ''}
-        onChange={value => updateMovie('poster_path', value)}
-      />
-      {/* <select name="genre" title="genre">
-        <option value="crime">Crime</option>
-        <option value="documentary">Documentary</option>
-        <option value="horror">Horror</option>
-        <option value="comedy">Comedy</option>
-      </select> */}
-      <MutliSelectControl
-        id="movieGenres"
-        label="genre"
-        placeholder="Select genre"
-        value={selectedGenres}
-        options={movieGenreOptions}
-        onChange={updateMovieGenres}
-      />
-      <TextControl
-        id="movieOverview"
-        label="overview"
-        placeholder="Overview here"
-        value={formMovie.overview || ''}
-        onChange={value => updateMovie('overview', value)}
-      />
-      <NumberControl
-        id="movieRuntime"
-        label="runtime"
-        placeholder="Runtime here"
-        value={formMovie.runtime}
-        onChange={value => updateMovie('runtime', value)}
-      />
+    <Formik initialValues={formMovie} onSubmit={onSubmit}>
+      <WrappedForm>
+        <TextControl name="title" label="title" placeholder="Title here" />
+        <DateControl
+          id="releaseDate"
+          label="release date"
+          placeholder="Select date"
+          value={formMovie.release_date}
+          onChange={value => updateMovie('release_date', value)}
+        />
+        <TextControl
+          name="poster_path"
+          label="movie url"
+          placeholder="Movie URL here"
+        />
+        <MutliSelectControl
+          name="genres"
+          label="genre"
+          placeholder="Select genre"
+          options={movieGenreOptions}
+        />
+        <TextControl
+          name="overview"
+          label="overview"
+          placeholder="Overview here"
+        />
+        <NumberControl
+          name="runtime"
+          label="runtime"
+          placeholder="Runtime here"
+        />
 
-      <ModalButtons>
-        <Button
-          className={loading ? ButtonVariant.Disabled : ButtonVariant.Outlined}
-          type="reset"
-          onClick={onReset}
-          disabled={loading}
-        >
-          reset
-        </Button>
-        <Button
-          className={loading ? ButtonVariant.Disabled : ButtonVariant.Contained}
-          type="submit"
-          onClick={onSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <FontAwesomeIcon
-              className="loader-icon"
-              size="2x"
-              icon={faSpinner}
-              spin
-            />
-          ) : (
-            'submit'
-          )}
-        </Button>
-      </ModalButtons>
-    </Form>
+        <ModalButtons>
+          <Button
+            className={
+              loading ? ButtonVariant.Disabled : ButtonVariant.Outlined
+            }
+            type="reset"
+            onClick={onReset}
+            disabled={loading}
+          >
+            reset
+          </Button>
+          <Button
+            className={
+              loading ? ButtonVariant.Disabled : ButtonVariant.Contained
+            }
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? (
+              <FontAwesomeIcon
+                className="loader-icon"
+                size="2x"
+                icon={faSpinner}
+                spin
+              />
+            ) : (
+              'submit'
+            )}
+          </Button>
+        </ModalButtons>
+      </WrappedForm>
+    </Formik>
   );
 }
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
 import { lighten } from 'polished';
+import { useField } from 'formik';
 
 import Input from './Input';
 import Label from './Label';
@@ -40,36 +41,46 @@ const Option = styled.li`
 `;
 
 interface Props {
-  id: string;
-  value: { id: string; label: string }[];
+  name: string;
   label: string;
   placeholder: string;
   options: { id: string; label: string }[];
-  onChange: (value: { id: string; label: string }[]) => void;
 }
-
 const MutliSelectControl = (props: Props) => {
   const [isOpenned, toggleOpen] = React.useState(false);
 
-  const onToggle = () => {
-    toggleOpen(!isOpenned);
-  };
+  const [, meta, helpers] = useField(props.name);
 
-  const isOptionSelected = (option: { id: string }) =>
-    props.value.find(val => val.id === option.id);
+  const { value } = meta;
+  const { setValue } = helpers;
+
+  const inputValue = React.useMemo(() => value?.join(', ') || '', [value]);
+
+  const onToggle = React.useCallback(() => {
+    toggleOpen(!isOpenned);
+  }, [isOpenned, toggleOpen]);
+
+  const isOptionSelected = (option: { label: string }) =>
+    !!value?.find(val => val === option.label);
 
   const selectedOptionChange = (option: { id: string; label: string }) => {
-    const selectedOption = isOptionSelected(option);
-    const selection = selectedOption
-      ? props.value.filter(val => val.id !== selectedOption.id)
-      : [...props.value, option];
-    props.onChange(selection);
+    const isSelected = isOptionSelected(option);
+    const selection = isSelected
+      ? value.filter(val => val !== option.label)
+      : [...(value || []), option.label];
+    setValue(selection);
   };
 
   return (
     <>
-      <Label htmlFor={props.id}>{props.label}</Label>
-      <Input id={props.id} placeholder={props.placeholder} onClick={onToggle} />
+      <Label htmlFor={props.name}>{props.label}</Label>
+      <Input
+        readOnly
+        id={props.name}
+        value={inputValue}
+        placeholder={props.placeholder}
+        onClick={onToggle}
+      />
       <OptionsWrapper>
         {isOpenned && (
           <Options>

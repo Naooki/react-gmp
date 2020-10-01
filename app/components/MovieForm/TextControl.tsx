@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
+import { useField } from 'formik';
 
 import Input from './Input';
 import Label from './Label';
@@ -9,25 +10,14 @@ const TextInput = styled(Input).attrs({
   type: 'text',
 })``;
 
-interface Props {
-  id: string;
-  value: string;
-  label: string;
-  placeholder: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+const TextControl = ({ label, name, ...props }: any) => {
+  const [field, meta] = useField(name);
 
-const TextControl = (props: Props) => {
   return (
     <>
-      <Label htmlFor={props.id}>{props.label}</Label>
-      <TextInput
-        placeholder={props.placeholder}
-        id={props.id}
-        value={props.value}
-        onChange={props.onChange}
-      />
-      <ErrorMsg>Some generic error</ErrorMsg>
+      <Label htmlFor={name}>{label}</Label>
+      <TextInput id={name} {...field} {...props} />
+      {meta.touched && meta.error ? <ErrorMsg>test1</ErrorMsg> : null}
     </>
   );
 };

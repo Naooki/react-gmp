@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
+import { useField } from 'formik';
 
 import Input from './Input';
 import Label from './Label';
@@ -9,25 +10,13 @@ const NumberInput = styled(Input).attrs({
   type: 'number',
 })``;
 
-interface Props {
-  id: string;
-  value: number;
-  label: string;
-  placeholder: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-const NumberControl = (props: Props) => {
+const NumberControl = ({ label, name, ...props }: any) => {
+  const [field, meta] = useField(name);
   return (
     <>
-      <Label htmlFor={props.id}>{props.label}</Label>
-      <NumberInput
-        placeholder={props.placeholder}
-        id={props.id}
-        value={props.value}
-        onChange={props.onChange}
-      />
-      <ErrorMsg>Some generic error</ErrorMsg>
+      <Label htmlFor={name}>{label}</Label>
+      <NumberInput id={name} {...field} {...props} />
+      {meta.touched && meta.error ? <ErrorMsg>test</ErrorMsg> : null}
     </>
   );
 };
