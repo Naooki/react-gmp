@@ -28,7 +28,9 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'jest'],
   rules: {
+    'import/prefer-default-export': 0,
     'react/destructuring-assignment': 0,
+    'react/jsx-props-no-spreading': 0,
     '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
   settings: {

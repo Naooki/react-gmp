@@ -1,20 +1,32 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
-import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'connected-react-router';
+import { parse, stringify } from 'query-string';
 
-import Modal from 'components/Modal';
-import Confirmation from 'components/Confirmation';
-import EditMovie from 'containers/EditMovie';
-import { Movie } from 'entities/Movie';
+import { openModal } from 'containers/Modal/actions';
+import { ModalTypes } from 'containers/Modal/constants';
+import Loader from 'components/Loader';
 import MovieList from 'components/MovieList';
 import SortBy, { SortType } from 'components/SortBy';
 import Tabs from 'components/Tabs';
-import moviesData from './movies-data';
+import { makeSelectMovieItems } from './selectors';
+import { deleteMovie, getMovies, movieSortChange } from './actions';
 
 const Main = styled.main`
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   padding: 0 3rem 2rem;
   background: ${props => props.theme.componentBackground};
+`;
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
 `;
 
 const MovieListControls = styled.div`
@@ -35,101 +47,121 @@ const SortControls = styled.div`
 `;
 
 const Movies = () => {
-  const tabs = [
-    { label: 'all' },
-    { label: 'documentary' },
-    { label: 'comedy' },
-    { label: 'horror' },
-    { label: 'crime' },
-  ];
+  const location = useLocation();
 
-  const history = useHistory();
+  const tabs = React.useMemo(() => {
+    const params = parse(location.search);
+    delete params.filter;
 
-  const [movies, setMovies] = React.useState([...moviesData]);
-  const [activeTab, activeTabChange] = React.useState(tabs[0]);
-  const releaseDateOrderChange = (type: SortType) => {
-    let reorderedMovies: Movie[];
-    switch (type) {
+    return [
+      { label: 'all', path: stringify({ ...params }) },
+      {
+        label: 'documentary',
+        path: stringify({ ...params, filter: 'documentary' }),
+      },
+      {
+        label: 'comedy',
+        path: stringify({ ...params, filter: 'comedy' }),
+      },
+      {
+        label: 'horror',
+        path: stringify({ ...params, filter: 'horror' }),
+      },
+      {
+        label: 'crime',
+        path: stringify({ ...params, filter: 'crime' }),
+      },
+    ];
+  }, [location.search]);
+
+  const activeTab = React.useMemo(
+    () => tabs.find(tab => `?${tab.path}` === location.search) || tabs[0],
+    [tabs, location.search],
+  );
+
+  const movies = useSelector(makeSelectMovieItems());
+  const dispatch = useDispatch();
+
+  // Refetch on query params change
+  React.useEffect(() => {
+    dispatch(getMovies());
+  }, [dispatch, location.search]);
+
+  const onOrderChange = (
+    sortBy: 'release_date' | 'vote_average',
+    sortOrder: SortType,
+  ) => {
+    switch (sortOrder) {
       case SortType.Ascending:
-        reorderedMovies = movies.sort((a, b) =>
-          a.releaseDate < b.releaseDate ? -1 : 1,
-        );
-        break;
       case SortType.Descending:
-        reorderedMovies = movies.sort((a, b) =>
-          a.releaseDate > b.releaseDate ? -1 : 1,
-        );
+        dispatch(movieSortChange({ sortBy, sortOrder }));
         break;
       default:
-        reorderedMovies = [...moviesData];
+        dispatch(movieSortChange({}));
     }
-    setMovies([...reorderedMovies]);
   };
 
-  const [modalContent, toggleModal] = React.useState<React.ReactNode>(null);
-
-  const onMovieEdit = React.useCallback(async (id: string) => {
-    // MOCK: fetch movie by id
-    const movie = await Promise.resolve(
-      moviesData.find(m => m.id === id) as Movie,
-    );
-
-    const editMovie = (
-      <Modal onClose={() => toggleModal(null)}>
-        <EditMovie movie={movie} />
-      </Modal>
-    );
-
-    toggleModal(editMovie);
-  }, []);
-
-  const deleteMovie = React.useCallback(async (movieId: string) => {
-    // MOCK: Delete Api call
-    console.log(`Delete movie with id: ${movieId}`);
-    await Promise.resolve(movieId);
-    toggleModal(null);
-  }, []);
+  const onMovieEdit = React.useCallback(
+    (id: number) => {
+      const modalType = ModalTypes.EDIT_MOVIE;
+      const modalProps = { id };
+      dispatch(openModal({ modalType, modalProps }));
+    },
+    [dispatch],
+  );
 
   const onMovieDelete = React.useCallback(
-    (id: string) => {
-      const heading = 'delete movie';
-      const text = 'Are you sure you want to delete this movie?';
+    (id: number) => {
+      const modalType = ModalTypes.CONFIRMATION;
+      const modalProps = {
+        heading: 'delete movie',
+        text: 'Are you sure you want to delete this movie?',
+        loading: false,
+        onConfirm: () => dispatch(deleteMovie(id.toString())),
+      };
 
-      const deleteMovieConfirmation = (
-        <Modal onClose={() => toggleModal(null)}>
-          <Confirmation
-            heading={heading}
-            text={text}
-            onConfirm={() => deleteMovie(id)}
-          />
-        </Modal>
-      );
-
-      toggleModal(deleteMovieConfirmation);
+      dispatch(openModal({ modalType, modalProps }));
     },
-    [deleteMovie],
+    [dispatch],
+  );
+
+  const onMovieClick = React.useCallback(
+    (id: number) => {
+      dispatch(
+        push({
+          pathname: `/movie/${id}`,
+          search: location.search,
+        }),
+      );
+    },
+    [dispatch, location.search],
   );
 
   return (
-    <>
-      <Main>
-        <MovieListControls>
-          <Tabs tabs={tabs} activeTab={activeTab} tabChange={activeTabChange} />
-          <SortControls>
-            <span className="label">sort by</span>
-            <SortBy label="release date" orderChange={releaseDateOrderChange} />
-          </SortControls>
-        </MovieListControls>
+    <Main>
+      <MovieListControls>
+        <Tabs tabs={tabs} activeTab={activeTab} />
+        <SortControls>
+          <span className="label">sort by</span>
+          <SortBy
+            label="release date"
+            orderChange={type => onOrderChange('release_date', type)}
+          />
+        </SortControls>
+      </MovieListControls>
+      {movies ? (
         <MovieList
           movies={movies}
-          onMovieClick={id => history.push(`/movie/${id}`)}
+          onMovieClick={onMovieClick}
           onMovieEdit={onMovieEdit}
           onMovieDelete={onMovieDelete}
         />
-      </Main>
-
-      {modalContent}
-    </>
+      ) : (
+        <LoaderWrapper>
+          <Loader />
+        </LoaderWrapper>
+      )}
+    </Main>
   );
 };
 

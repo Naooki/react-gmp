@@ -4,17 +4,19 @@ import styled from 'styles/styled-components';
 import { Movie } from 'entities/Movie';
 import Menu from 'components/Menu';
 import MenuItem from 'components/Menu/MenuItem';
+import MovieImage from 'components/MovieImage';
 
 interface Props {
   movie: Movie;
-  onMovieEdit: (id: string) => void;
-  onMovieDelete: (id: string) => void;
-  onMovieClick: (id: string) => void;
+  onMovieEdit: (id: number) => void;
+  onMovieDelete: (id: number) => void;
+  onMovieClick: (id: number) => void;
 }
 
 const MovieItemWrapper = styled.div`
   position: relative;
   width: 300px;
+  margin: 0 auto;
 
   & > .movie-item-menu {
     display: none;
@@ -31,32 +33,6 @@ const MovieItemWrapper = styled.div`
     display: block;
   }
 `;
-
-const MovieImage = styled.img.attrs(props => ({
-  src: props.src,
-  alt: props.alt,
-}))`
-  display: block;
-  width: 100%;
-  height: 400px;
-`;
-
-const NoImageWrapper = styled.div`
-  display: flex;
-  height: 400px;
-  box-sizing: border-box;
-  border: 1px solid ${props => props.theme.text};
-  > h4 {
-    margin: auto;
-    color: ${props => props.theme.text};
-  }
-`;
-
-const NoImage = () => (
-  <NoImageWrapper>
-    <h4>No Image Found</h4>
-  </NoImageWrapper>
-);
 
 const MovieItemDesc = styled.div`
   padding: 0.5rem 0;
@@ -90,9 +66,9 @@ const MovieItemGenres = styled.span`
 `;
 
 const MovieListItem = (props: Props) => {
-  const releaseYear = props.movie.releaseDate;
-  const genres = React.useMemo(() => props.movie.genres.join(', '), [
-    props.movie.genres,
+  const releaseYear = props.movie.release_date;
+  const genres = React.useMemo(() => props.movie?.genres?.join(', ') || '', [
+    props.movie,
   ]);
 
   return (
@@ -105,11 +81,7 @@ const MovieListItem = (props: Props) => {
           Delete
         </MenuItem>
       </Menu>
-      {props.movie.imageUrl ? (
-        <MovieImage src={props.movie.imageUrl} alt="Movie poster" />
-      ) : (
-        <NoImage />
-      )}
+      <MovieImage src={props.movie.poster_path} alt="Movie poster" />
       <MovieItemDesc>
         <MovieItemHeading>{props.movie.title}</MovieItemHeading>
         <MovieItemYear>{releaseYear}</MovieItemYear>

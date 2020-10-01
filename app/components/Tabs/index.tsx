@@ -29,10 +29,15 @@ const TabsWrapper = styled.ul`
   margin: 0;
 `;
 
+interface TabOption {
+  label: string;
+  path: string;
+}
+
 interface Props {
-  tabs: any[];
-  activeTab?: any;
-  tabChange: (tab: any) => void;
+  tabs: TabOption[];
+  activeTab: TabOption;
+  tabChange?: (tab: TabOption) => void;
 }
 
 const Tabs = (props: Props) => {
@@ -42,9 +47,9 @@ const Tabs = (props: Props) => {
         <Tab
           key={tab.label}
           className={tab.label === props.activeTab.label ? 'active' : ''}
-          onClick={() => props.tabChange(tab)}
+          onClick={() => props.tabChange && props.tabChange(tab)}
         >
-          <TabLink to={`search?genre=${tab.label}`}>{tab.label}</TabLink>
+          <TabLink to={`?${tab.path}`}>{tab.label}</TabLink>
         </Tab>
       ))}
     </TabsWrapper>

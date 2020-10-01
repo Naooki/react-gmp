@@ -1,6 +1,6 @@
 import styled from 'styles/styled-components';
 
-const ModalActions = styled.div`
+const ModalButtons = styled.div`
   display: flex;
   justify-content: flex-end;
   height: 3rem;
@@ -13,4 +13,4 @@ const ModalActions = styled.div`
   }
 `;
 
-export default ModalActions;
+export default ModalButtons;
