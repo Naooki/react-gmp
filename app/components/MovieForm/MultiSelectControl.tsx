@@ -3,6 +3,7 @@ import styled from 'styles/styled-components';
 import { lighten } from 'polished';
 import { useField } from 'formik';
 
+import ControlWrapper from './ControlWrapper';
 import Input from './Input';
 import Label from './Label';
 import ErrorMsg from './ErrorMsg';
@@ -12,6 +13,7 @@ const OptionsWrapper = styled.div`
 `;
 const Options = styled.ul`
   position: absolute;
+  z-index: 1;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -22,6 +24,8 @@ const Options = styled.ul`
 `;
 const Option = styled.li`
   padding: 0.5rem 1rem;
+  cursor: pointer;
+
   &:hover {
     background: ${props => lighten(0.05, props.theme.componentBackground)};
   }
@@ -43,16 +47,22 @@ const Option = styled.li`
 interface Props {
   name: string;
   label: string;
-  placeholder: string;
   options: { id: string; label: string }[];
+  placeholder?: string;
+  validate?: (value: string[]) => string | undefined;
 }
-const MutliSelectControl = (props: Props) => {
-  const [isOpenned, toggleOpen] = React.useState(false);
-
-  const [, meta, helpers] = useField(props.name);
-
+const MutliSelectControl = ({
+  label,
+  name,
+  placeholder,
+  validate,
+  ...props
+}: Props) => {
+  const [, meta, helpers] = useField(name);
   const { value } = meta;
   const { setValue } = helpers;
+  const isInvalid = React.useMemo(() => meta.touched && meta.error, [meta]);
+  const [isOpenned, toggleOpen] = React.useState(false);
 
   const inputValue = React.useMemo(() => value?.join(', ') || '', [value]);
 
@@ -72,13 +82,13 @@ const MutliSelectControl = (props: Props) => {
   };
 
   return (
-    <>
-      <Label htmlFor={props.name}>{props.label}</Label>
+    <ControlWrapper>
+      <Label htmlFor={name}>{label}</Label>
       <Input
         readOnly
-        id={props.name}
+        id={name}
         value={inputValue}
-        placeholder={props.placeholder}
+        placeholder={placeholder}
         onClick={onToggle}
       />
       <OptionsWrapper>
@@ -96,8 +106,8 @@ const MutliSelectControl = (props: Props) => {
           </Options>
         )}
       </OptionsWrapper>
-      <ErrorMsg>Some generic error</ErrorMsg>
-    </>
+      {isInvalid ? <ErrorMsg>{meta.error}</ErrorMsg> : null}
+    </ControlWrapper>
   );
 };
 

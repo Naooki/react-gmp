@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
 
+import ControlWrapper from './ControlWrapper';
 import Input from './Input';
 import Label from './Label';
 import ErrorMsg from './ErrorMsg';
@@ -19,11 +20,11 @@ interface Props {
 
 const DateControl = (props: Props) => {
   return (
-    <>
+    <ControlWrapper>
       <Label htmlFor={props.id}>{props.label}</Label>
       <DateInput id={props.id} value={props.value} onChange={props.onChange} />
       <ErrorMsg>Some generic error</ErrorMsg>
-    </>
+    </ControlWrapper>
   );
 };
 
