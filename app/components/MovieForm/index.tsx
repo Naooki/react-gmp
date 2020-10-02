@@ -41,19 +41,39 @@ function MovieForm({ movie, loading, onConfirm }: Props) {
 
   const onSubmit = React.useCallback(e => onConfirm(e), [onConfirm]);
 
-  const required = React.useCallback((value: string | string[] | number) => {
-    const isInvalid = !value || (Array.isArray(value) && !value.length);
-    return isInvalid ? 'Required' : undefined;
+  const requiredFieldsValidator = React.useCallback((values: Movie) => {
+    const errors: { [key in keyof Movie]?: 'Required' } = {};
+
+    const requiredFields: ReadonlyArray<keyof Movie> = [
+      'title',
+      'poster_path',
+      'overview',
+      'runtime',
+      'genres',
+    ];
+    requiredFields.forEach(field => {
+      if (!values[field]) {
+        errors[field] = 'Required';
+      }
+    });
+    if (!Array.isArray(values.genres) || !values.genres.length) {
+      errors.genres = 'Required';
+    }
+
+    return errors;
   }, []);
 
   return (
-    <Formik initialValues={formMovie} onSubmit={onSubmit}>
+    <Formik
+      initialValues={formMovie}
+      validate={requiredFieldsValidator}
+      onSubmit={onSubmit}
+    >
       <WrappedForm>
         <InputControl
-          validate={required}
           type="text"
           name="title"
-          label="title"
+          label="title*"
           placeholder="Title here"
         />
         <InputControl
@@ -65,26 +85,25 @@ function MovieForm({ movie, loading, onConfirm }: Props) {
         <InputControl
           type="text"
           name="poster_path"
-          label="movie url"
+          label="movie url*"
           placeholder="Movie URL here"
         />
         <MutliSelectControl
           name="genres"
-          label="genre"
+          label="genre*"
           placeholder="Select genre"
           options={movieGenreOptions}
         />
         <InputControl
           type="text"
           name="overview"
-          label="overview"
+          label="overview*"
           placeholder="Overview here"
         />
         <InputControl
-          validate={required}
           type="number"
           name="runtime"
-          label="runtime"
+          label="runtime*"
           placeholder="Runtime here"
         />
 

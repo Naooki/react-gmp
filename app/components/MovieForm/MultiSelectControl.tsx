@@ -60,15 +60,19 @@ const MutliSelectControl = ({
 }: Props) => {
   const [, meta, helpers] = useField(name);
   const { value } = meta;
-  const { setValue } = helpers;
+  const { setTouched, setValue } = helpers;
   const isInvalid = React.useMemo(() => meta.touched && meta.error, [meta]);
   const [isOpenned, toggleOpen] = React.useState(false);
 
   const inputValue = React.useMemo(() => value?.join(', ') || '', [value]);
 
   const onToggle = React.useCallback(() => {
+    if (isOpenned) {
+      setTouched(true);
+    }
+
     toggleOpen(!isOpenned);
-  }, [isOpenned, toggleOpen]);
+  }, [isOpenned, setTouched, toggleOpen]);
 
   const isOptionSelected = (option: { label: string }) =>
     !!value?.find(val => val === option.label);
@@ -85,6 +89,7 @@ const MutliSelectControl = ({
     <ControlWrapper>
       <Label htmlFor={name}>{label}</Label>
       <Input
+        className={isInvalid ? 'invalid' : ''}
         readOnly
         id={name}
         value={inputValue}
