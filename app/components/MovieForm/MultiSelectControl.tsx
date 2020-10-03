@@ -1,12 +1,9 @@
 import * as React from 'react';
 import styled from 'styles/styled-components';
 import { lighten } from 'polished';
-import { useField } from 'formik';
 
-import ControlWrapper from './ControlWrapper';
+import withControl from './Control';
 import Input from './Input';
-import Label from './Label';
-import ErrorMsg from './ErrorMsg';
 
 const OptionsWrapper = styled.div`
   position: relative;
@@ -50,18 +47,24 @@ interface Props {
   options: { id: string; label: string }[];
   placeholder?: string;
   validate?: (value: string[]) => string | undefined;
+  value: string[];
+  touched: boolean;
+  error?: string;
+  setValue: any;
+  setTouched: any;
 }
 const MutliSelectControl = ({
   label,
   name,
   placeholder,
   validate,
+  value,
+  touched,
+  error,
   ...props
 }: Props) => {
-  const [, meta, helpers] = useField(name);
-  const { value } = meta;
-  const { setTouched, setValue } = helpers;
-  const isInvalid = React.useMemo(() => meta.touched && meta.error, [meta]);
+  const { setTouched, setValue } = props;
+  const isInvalid = React.useMemo(() => touched && error, [error, touched]);
   const [isOpenned, toggleOpen] = React.useState(false);
 
   const inputValue = React.useMemo(() => value?.join(', ') || '', [value]);
@@ -86,8 +89,7 @@ const MutliSelectControl = ({
   };
 
   return (
-    <ControlWrapper>
-      <Label htmlFor={name}>{label}</Label>
+    <>
       <Input
         className={isInvalid ? 'invalid' : ''}
         readOnly
@@ -111,9 +113,8 @@ const MutliSelectControl = ({
           </Options>
         )}
       </OptionsWrapper>
-      {isInvalid ? <ErrorMsg>{meta.error}</ErrorMsg> : null}
-    </ControlWrapper>
+    </>
   );
 };
 
-export default MutliSelectControl;
+export default withControl(MutliSelectControl as any);

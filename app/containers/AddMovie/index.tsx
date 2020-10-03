@@ -17,6 +17,7 @@ function AddMovie(props: Props) {
     overview: '',
     genres: [],
     runtime: '',
+    release_date: '',
   } as MovieFormModel;
   const dispatch = useDispatch();
   const onCreateMovieClick = React.useCallback(
