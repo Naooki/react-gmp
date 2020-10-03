@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { useField } from 'formik';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import ControlWrapper from './ControlWrapper';
 import Input from './Input';
@@ -22,6 +24,9 @@ const InputControl = ({ label, name, type, validate, ...props }: any) => {
         type={type}
         value={field.value || ''} // handle undefined initial state
       />
+      {validate && props.validating && (
+        <FontAwesomeIcon className="loader-icon" icon={faSpinner} spin />
+      )}
       {isInvalid ? <ErrorMsg>{meta.error}</ErrorMsg> : null}
     </ControlWrapper>
   );
