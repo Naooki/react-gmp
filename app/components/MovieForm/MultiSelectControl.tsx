@@ -2,15 +2,15 @@ import * as React from 'react';
 import styled from 'styles/styled-components';
 import { lighten } from 'polished';
 
+import withControl from './Control';
 import Input from './Input';
-import Label from './Label';
-import ErrorMsg from './ErrorMsg';
 
 const OptionsWrapper = styled.div`
   position: relative;
 `;
 const Options = styled.ul`
   position: absolute;
+  z-index: 1;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -21,6 +21,8 @@ const Options = styled.ul`
 `;
 const Option = styled.li`
   padding: 0.5rem 1rem;
+  cursor: pointer;
+
   &:hover {
     background: ${props => lighten(0.05, props.theme.componentBackground)};
   }
@@ -40,36 +42,62 @@ const Option = styled.li`
 `;
 
 interface Props {
-  id: string;
-  value: { id: string; label: string }[];
+  name: string;
   label: string;
-  placeholder: string;
   options: { id: string; label: string }[];
-  onChange: (value: { id: string; label: string }[]) => void;
+  placeholder?: string;
+  validate?: (value: string[]) => string | undefined;
+  value: string[];
+  touched: boolean;
+  error?: string;
+  setValue: any;
+  setTouched: any;
 }
-
-const MutliSelectControl = (props: Props) => {
+const MutliSelectControl = ({
+  label,
+  name,
+  placeholder,
+  validate,
+  value,
+  touched,
+  error,
+  ...props
+}: Props) => {
+  const { setTouched, setValue } = props;
+  const isInvalid = React.useMemo(() => touched && error, [error, touched]);
   const [isOpenned, toggleOpen] = React.useState(false);
 
-  const onToggle = () => {
-    toggleOpen(!isOpenned);
-  };
+  const inputValue = React.useMemo(() => value?.join(', ') || '', [value]);
 
-  const isOptionSelected = (option: { id: string }) =>
-    props.value.find(val => val.id === option.id);
+  const onToggle = React.useCallback(() => {
+    if (isOpenned) {
+      setTouched(true);
+    }
+
+    toggleOpen(!isOpenned);
+  }, [isOpenned, setTouched, toggleOpen]);
+
+  const isOptionSelected = (option: { label: string }) =>
+    !!value?.find(val => val === option.label);
 
   const selectedOptionChange = (option: { id: string; label: string }) => {
-    const selectedOption = isOptionSelected(option);
-    const selection = selectedOption
-      ? props.value.filter(val => val.id !== selectedOption.id)
-      : [...props.value, option];
-    props.onChange(selection);
+    const isSelected = isOptionSelected(option);
+    const selection = isSelected
+      ? value.filter(val => val !== option.label)
+      : [...(value || []), option.label];
+    setValue(selection);
   };
 
   return (
     <>
-      <Label htmlFor={props.id}>{props.label}</Label>
-      <Input id={props.id} placeholder={props.placeholder} onClick={onToggle} />
+      <Input
+        className={isInvalid ? 'invalid' : ''}
+        readOnly
+        id={name}
+        value={inputValue}
+        placeholder={placeholder}
+        onClick={onToggle}
+      />
       <OptionsWrapper>
         {isOpenned && (
           <Options>
@@ -85,9 +113,8 @@ const MutliSelectControl = (props: Props) => {
           </Options>
         )}
       </OptionsWrapper>
-      <ErrorMsg>Some generic error</ErrorMsg>
     </>
   );
 };
 
-export default MutliSelectControl;
+export default withControl(MutliSelectControl as any);

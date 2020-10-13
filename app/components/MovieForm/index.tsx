@@ -1,18 +1,24 @@
 import * as React from 'react';
+import { Formik, Form } from 'formik';
 import styled from 'styles/styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { of } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+import { catchError, map, tap } from 'rxjs/operators';
+import debounce from 'lodash-es/debounce';
 
+import cloneDeep from 'utils/cloneDeep';
 import { Movie } from 'entities/Movie';
 import MovieGenre from 'entities/MovieGenre';
-import Button, { ButtonVariant } from 'components/Button';
+import MoviesResponse from 'entities/MoviesResponse';
 import ModalButtons from 'containers/Modal/ModalButtons';
-import TextControl from './TextControl';
-import DateControl from './DateControl';
-import NumberControl from './NumberControl';
+import InputControl from './InputControl';
 import MutliSelectControl from './MultiSelectControl';
+import MovieFormActions from './MovieFormActions';
+import { MovieFormModel } from './MovieFormModel';
 
-const Form = styled.form`
+const API_URL = 'http://localhost:4000';
+
+const WrappedForm = styled(Form)`
   display: flex;
   flex-direction: column;
 `;
@@ -22,138 +28,123 @@ const movieGenreOptions = Object.keys(MovieGenre).map(id => ({
   label: MovieGenre[id],
 }));
 
-type CloneDeep = <T>(value: T) => T;
-const cloneDeep: CloneDeep = obj => JSON.parse(JSON.stringify(obj));
-
 interface Props {
-  movie: Movie;
+  movie: MovieFormModel;
   loading: boolean;
   onConfirm: (movie: Movie) => void;
 }
 
 function MovieForm({ movie, loading, onConfirm }: Props) {
-  const [formMovie, setMovie] = React.useState(() => cloneDeep(movie));
+  const [formMovie] = React.useState(() => cloneDeep(movie));
 
-  const updateMovie = (
-    key: keyof Movie,
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setMovie({
-      ...formMovie,
-      [key]: key === 'runtime' ? +e.target.value : e.target.value,
+  const onSubmit = React.useCallback(e => onConfirm(e), [onConfirm]);
+
+  const requiredFieldsValidator = React.useCallback((values: Movie) => {
+    const errors: { [key in keyof Movie]?: 'Required' } = {};
+
+    const requiredFields: ReadonlyArray<keyof Movie> = [
+      'title',
+      'poster_path',
+      'overview',
+      'runtime',
+      'genres',
+    ];
+    requiredFields.forEach(field => {
+      if (!values[field]) {
+        errors[field] = 'Required';
+      }
     });
-  };
+    if (!Array.isArray(values.genres) || !values.genres.length) {
+      errors.genres = 'Required';
+    }
 
-  const updateMovieGenres = (value: { id: string; label: string }[]) => {
-    const genres = value.map(v => v.id as MovieGenre);
-    setMovie({
-      ...formMovie,
-      genres,
-    });
-  };
+    return errors;
+  }, []);
 
-  const selectedGenres = formMovie.genres
-    ? movieGenreOptions.filter(option =>
-        formMovie?.genres?.find(genre => genre === option.label),
+  const uriValidator = React.useCallback((value: string) => {
+    try {
+      // eslint-disable-next-line no-new
+      new URL(value);
+      return undefined;
+    } catch {
+      return 'Invalid URI';
+    }
+  }, []);
+
+  const [valdatingTitle, setValidatingTitle] = React.useState(false);
+  const movieTitleValidator = React.useCallback((value: string) => {
+    setValidatingTitle(true);
+    return ajax
+      .getJSON<MoviesResponse>(`${API_URL}/movies?search=${value}`)
+      .pipe(
+        map(response => response.data),
+        map(movies =>
+          movies.find(m => m.title.toLowerCase() === value.toLowerCase()),
+        ),
+        map(m => (m ? 'Movie with this title already exists.' : undefined)),
+        catchError(() => of(undefined)),
+        tap(() => setValidatingTitle(false)),
       )
-    : [];
+      .toPromise();
+  }, []);
 
-  const onReset = React.useCallback(
-    e => {
-      e.preventDefault();
-      setMovie(cloneDeep(movie));
-    },
-    [movie],
-  );
-
-  const onSubmit = React.useCallback(
-    e => {
-      e.preventDefault();
-      onConfirm(formMovie);
-    },
-    [formMovie, onConfirm],
+  const debouncedValidator = React.useMemo(
+    () => debounce(movieTitleValidator, 500),
+    [movieTitleValidator],
   );
 
   return (
-    <Form>
-      <TextControl
-        id="title"
-        label="title"
-        placeholder="Title here"
-        value={formMovie.title}
-        onChange={value => updateMovie('title', value)}
-      />
-      <DateControl
-        id="releaseDate"
-        label="release date"
-        placeholder="Select date"
-        value={formMovie.release_date}
-        onChange={value => updateMovie('release_date', value)}
-      />
-      <TextControl
-        id="movieUrl"
-        label="movie url"
-        placeholder="Movie URL here"
-        value={formMovie.poster_path || ''}
-        onChange={value => updateMovie('poster_path', value)}
-      />
-      {/* <select name="genre" title="genre">
-        <option value="crime">Crime</option>
-        <option value="documentary">Documentary</option>
-        <option value="horror">Horror</option>
-        <option value="comedy">Comedy</option>
-      </select> */}
-      <MutliSelectControl
-        id="movieGenres"
-        label="genre"
-        placeholder="Select genre"
-        value={selectedGenres}
-        options={movieGenreOptions}
-        onChange={updateMovieGenres}
-      />
-      <TextControl
-        id="movieOverview"
-        label="overview"
-        placeholder="Overview here"
-        value={formMovie.overview || ''}
-        onChange={value => updateMovie('overview', value)}
-      />
-      <NumberControl
-        id="movieRuntime"
-        label="runtime"
-        placeholder="Runtime here"
-        value={formMovie.runtime}
-        onChange={value => updateMovie('runtime', value)}
-      />
+    <Formik
+      initialValues={formMovie}
+      validate={requiredFieldsValidator}
+      onSubmit={onSubmit}
+    >
+      <WrappedForm>
+        <InputControl
+          validating={valdatingTitle}
+          validate={formMovie.title ? null : debouncedValidator}
+          type="text"
+          name="title"
+          label="title*"
+          placeholder="Title here"
+        />
+        <InputControl
+          type="date"
+          name="release_date"
+          label="release date"
+          placeholder="Select date"
+        />
+        <InputControl
+          validate={uriValidator}
+          type="text"
+          name="poster_path"
+          label="movie url*"
+          placeholder="Movie URL here"
+        />
+        <MutliSelectControl
+          name="genres"
+          label="genre*"
+          placeholder="Select genre"
+          options={movieGenreOptions}
+        />
+        <InputControl
+          type="text"
+          name="overview"
+          label="overview*"
+          placeholder="Overview here"
+        />
+        <InputControl
+          type="number"
+          name="runtime"
+          label="runtime*"
+          placeholder="Runtime here"
+        />
 
-      <ModalButtons>
-        <Button
-          className={loading ? ButtonVariant.Disabled : ButtonVariant.Outlined}
-          type="reset"
-          onClick={onReset}
-          disabled={loading}
-        >
-          reset
-        </Button>
-        <Button
-          className={loading ? ButtonVariant.Disabled : ButtonVariant.Contained}
-          type="submit"
-          onClick={onSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <FontAwesomeIcon
-              className="loader-icon"
-              size="2x"
-              icon={faSpinner}
-              spin
-            />
-          ) : (
-            'submit'
-          )}
-        </Button>
-      </ModalButtons>
-    </Form>
+        <ModalButtons>
+          <MovieFormActions loading={loading} />
+        </ModalButtons>
+      </WrappedForm>
+    </Formik>
   );
 }
 

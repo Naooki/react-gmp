@@ -14,6 +14,10 @@ const Input = styled.input`
     background: ${props =>
       darken(0.05, props.theme.componentBackgroundSecondary)};
   }
+
+  &.invalid {
+    border-color: ${props => props.theme.primary};
+  }
 `;
 
 export default Input;
