@@ -129,7 +129,7 @@ const Movies = () => {
     (id: number) => {
       dispatch(
         push({
-          pathname: `/movie/${id}`,
+          pathname: `/film/${id}`,
           search: location.search,
         }),
       );
