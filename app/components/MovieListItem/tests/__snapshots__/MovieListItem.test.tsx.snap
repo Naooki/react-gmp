@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MovieListItem /> matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="sc-AxmLO kxxPnf"
+  >
+    <div
+      class="sc-AxjAm iFRHBp movie-item-menu "
+    >
+      <button
+        class="sc-AxirZ sTVkX"
+      >
+        <svg
+          aria-hidden="true"
+          class="svg-inline--fa fa-ellipsis-v fa-w-6 "
+          data-icon="ellipsis-v"
+          data-prefix="fas"
+          focusable="false"
+          role="img"
+          viewBox="0 0 192 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M96 184c39.8 0 72 32.2 72 72s-32.2 72-72 72-72-32.2-72-72 32.2-72 72-72zM24 80c0 39.8 32.2 72 72 72s72-32.2 72-72S135.8 8 96 8 24 40.2 24 80zm0 352c0 39.8 32.2 72 72 72s72-32.2 72-72-32.2-72-72-72-72 32.2-72 72z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    </div>
+    <img
+      alt="Movie poster"
+      class="sc-Axmtr jrCDfN"
+      src="https://image.tmdb.org/t/p/w500/ylXCdC106IKiarftHkcacasaAcb.jpg"
+    />
+    <div
+      class="sc-fzozJi knnLCK"
+    >
+      <h3
+        class="sc-fzoLsD gsLTYY"
+      >
+        La La Land
+      </h3>
+      <div
+        class="sc-fzpans epIulx"
+      >
+        2016-12-29
+      </div>
+      <span
+        class="sc-fzplWN iCUPXI"
+      >
+        Comedy, Drama, Romance
+      </span>
+    </div>
+  </div>
+</DocumentFragment>
+`;
