@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import styled from 'styles/styled-components';
 import Login from 'containers/Login';
@@ -20,8 +20,11 @@ function App() {
   return (
     <ModalContainer>
       <Switch>
+        <Route exact path="/">
+          <Redirect to="/search" />
+        </Route>
         <Route exact path="/login" component={Login} />
-        <Route path="/" component={Home} />
+        <Route path="/(search|film)" component={Home} />
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />

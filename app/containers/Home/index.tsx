@@ -19,11 +19,11 @@ import { ButtonVariant } from 'components/Button';
 import { ModalTypes } from 'containers/Modal/constants';
 import { openModal } from 'containers/Modal/actions';
 import { movieSearchChange } from 'containers/Movies/actions';
+import Logo from 'components/Logo';
 
 import AddMovieButton from './AddMovieButton';
 import Topbar from './Topbar';
 import Header from './Header';
-import Logo from './Logo';
 
 type RouteParams = {
   id: string;
@@ -40,7 +40,7 @@ function Home(props: RouteComponentProps<RouteParams>) {
   const dispatch = useDispatch();
 
   const isMoviePageActive = React.useMemo(
-    () => !!matchPath(props.location.pathname, '/movie/:id'),
+    () => !!matchPath(props.location.pathname, '/film/:id'),
     [props.location.pathname],
   );
 
@@ -63,7 +63,7 @@ function Home(props: RouteComponentProps<RouteParams>) {
           <Switch>
             <Route
               exact
-              path="/movie/:id"
+              path="/film/:id"
               component={() => (
                 <IconLink to="/">
                   <FontAwesomeIcon icon={faSearch} />
@@ -85,7 +85,7 @@ function Home(props: RouteComponentProps<RouteParams>) {
         </Header>
 
         <Switch>
-          <Route exact path="/movie/:id" component={MoviePage} />
+          <Route exact path="/film/:id" component={MoviePage} />
           <Route
             component={() => (
               <MovieSearch value={searchStr} onSearchChange={onSearchChange} />
