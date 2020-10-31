@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AddMovie /> matches snapshot 1`] = `
+<DocumentFragment>
+  <h1
+    class="sc-fzoLsD sc-fzpans pEcfq"
+  >
+    add movie
+  </h1>
+  <form
+    action="#"
+    class="sc-fzozJi fuiiNa"
+  >
+    <div
+      class="sc-AxirZ ebjXWE"
+    >
+      <label
+        class="sc-AxiKw ildPaq"
+        for="title"
+      >
+        title*
+      </label>
+      <input
+        class="sc-AxhUy XSPAy"
+        id="title"
+        name="title"
+        placeholder="Title here"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="sc-AxirZ ebjXWE"
+    >
+      <label
+        class="sc-AxiKw ildPaq"
+        for="release_date"
+      >
+        release date
+      </label>
+      <input
+        class="sc-AxhUy XSPAy"
+        id="release_date"
+        name="release_date"
+        placeholder="Select date"
+        type="date"
+        value=""
+      />
+    </div>
+    <div
+      class="sc-AxirZ ebjXWE"
+    >
+      <label
+        class="sc-AxiKw ildPaq"
+        for="poster_path"
+      >
+        movie url*
+      </label>
+      <input
+        class="sc-AxhUy XSPAy"
+        id="poster_path"
+        name="poster_path"
+        placeholder="Movie URL here"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="sc-AxirZ ebjXWE"
+    >
+      <label
+        class="sc-AxiKw ildPaq"
+        for="genres"
+      >
+        genre*
+      </label>
+      <input
+        class="sc-AxhUy XSPAy"
+        id="genres"
+        placeholder="Select genre"
+        readonly=""
+        value=""
+      />
+      <div
+        class="sc-AxgMl ecWowd"
+      />
+    </div>
+    <div
+      class="sc-AxirZ ebjXWE"
+    >
+      <label
+        class="sc-AxiKw ildPaq"
+        for="overview"
+      >
+        overview*
+      </label>
+      <input
+        class="sc-AxhUy XSPAy"
+        id="overview"
+        name="overview"
+        placeholder="Overview here"
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      class="sc-AxirZ ebjXWE"
+    >
+      <label
+        class="sc-AxiKw ildPaq"
+        for="runtime"
+      >
+        runtime*
+      </label>
+      <input
+        class="sc-AxhUy XSPAy"
+        id="runtime"
+        name="runtime"
+        placeholder="Runtime here"
+        type="number"
+        value=""
+      />
+    </div>
+    <div
+      class="sc-AxjAm qXCZf"
+    >
+      <button
+        class="sc-AxmLO vUKCa disabled"
+        disabled=""
+        type="reset"
+      >
+        reset
+      </button>
+      <button
+        class="sc-AxmLO vUKCa contained"
+        type="submit"
+      >
+        submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
