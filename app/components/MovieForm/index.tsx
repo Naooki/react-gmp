@@ -4,7 +4,7 @@ import styled from 'styles/styled-components';
 import { of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { catchError, map, tap } from 'rxjs/operators';
-import debounce from 'lodash-es/debounce';
+import debounce from 'lodash.debounce';
 
 import cloneDeep from 'utils/cloneDeep';
 import { Movie } from 'entities/Movie';
