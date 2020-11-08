@@ -5,23 +5,25 @@ import { ConnectedRouter } from 'connected-react-router';
 
 import configureStore from 'configureStore';
 import App from 'containers/App';
-import { ThemeProvider, theme } from 'styles/styled-components';
-import history from 'utils/history';
 
-const MOUNT_NODE = document.getElementById('app') as HTMLElement;
+const MOUNT_NODE = document.getElementById('root') as HTMLElement;
 
 // Create redux store with history
 const initialState = {};
-const store = configureStore(initialState);
+const { store, history } = configureStore(initialState);
 
 const ConnectedApp = () => (
   <Provider store={store}>
     <ConnectedRouter history={history}>
-      <ThemeProvider theme={theme.default}>
-        <App />
-      </ThemeProvider>
+      <App />
     </ConnectedRouter>
   </Provider>
 );
 
-ReactDOM.render(<ConnectedApp />, MOUNT_NODE);
+document.addEventListener(
+  'DOMContentLoaded',
+  () => {
+    ReactDOM.hydrate(<ConnectedApp />, MOUNT_NODE);
+  },
+  { once: true },
+);
