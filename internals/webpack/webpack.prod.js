@@ -10,7 +10,7 @@ module.exports = require('./webpack.base')({
 
   // Utilize long-term caching by adding content hashes (not compilation hashes) to compiled assets
   output: {
-    filename: '[name].[chunkhash].js',
+    filename: 'assets/[name].[chunkhash].js',
     chunkFilename: 'assets/[name].[chunkhash].chunk.js',
   },
 

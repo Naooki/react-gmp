@@ -10,9 +10,9 @@ export function Html({
   scripts,
   preloadedState,
 }: React.PropsWithChildren<Html>) {
-  const preloadedStringifiedState = `window.__PRELOADED_STATE__ = ${JSON.stringify(
+  const preloadedStringifiedState = `window.__PRELOADED_STATE__=${JSON.stringify(
     preloadedState,
-  ).replace(/</g, '\\u003c')}`;
+  )};`;
 
   return (
     <html lang="en">
@@ -27,7 +27,11 @@ export function Html({
       </head>
       <body>
         <div id="root">{children}</div>
-        <script>{preloadedStringifiedState}</script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: preloadedStringifiedState,
+          }}
+        />
         {scripts.map((script, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <script src={script} key={index} defer />

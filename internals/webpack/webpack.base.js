@@ -63,6 +63,8 @@ module.exports = options => ({
             options: {
               // Inline files smaller than 10 kB
               limit: 10 * 1024,
+              // if more than 10 kb move to this folder in build using file-loader
+              name: '/assets/[hash].[ext]',
             },
           },
           {

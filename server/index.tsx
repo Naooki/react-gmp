@@ -5,11 +5,12 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
-// import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
+import { ServerStyleSheet } from 'styled-components';
 
 import configureStore from 'configureStore';
 import App from 'containers/App';
 import { Html } from './Html';
+import { calculateInitialState } from './state';
 
 const port = 3000;
 const server = express();
@@ -26,18 +27,25 @@ fs.readdirSync(assetsDir).forEach(file => {
 server.use('/assets', express.static(assetsDir));
 
 server.get('*', async (req, res) => {
-  const initialState = {};
-  const { store } = configureStore(initialState, req.url);
+  const initialState = await calculateInitialState(req);
 
-  ReactDOMServer.renderToNodeStream(
-    <Html scripts={jsFiles} preloadedState={initialState}>
+  const { store } = configureStore(initialState, req.url);
+  const preloadedState = store.getState();
+
+  const sheet = new ServerStyleSheet();
+  const AppCollectedStyles = sheet.collectStyles(<App />);
+
+  const nodeStream = ReactDOMServer.renderToNodeStream(
+    <Html scripts={jsFiles} preloadedState={preloadedState}>
       <Provider store={store}>
         <StaticRouter location={req.url} context={{}}>
-          <App />
+          {AppCollectedStyles}
         </StaticRouter>
       </Provider>
     </Html>,
-  ).pipe(res);
+  );
+
+  sheet.interleaveWithNodeStream(nodeStream).pipe(res);
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
