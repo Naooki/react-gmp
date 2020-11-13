@@ -1,12 +1,12 @@
 import { Request } from 'express';
 import fetch from 'node-fetch';
+import { stringify } from 'query-string';
 
 import { Movie } from 'entities/Movie';
 
 const API_URL = 'http://localhost:4000';
 
 export async function calculateInitialState(req: Request) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { path, query } = req;
   const paths = path.split('/').slice(1);
 
@@ -15,9 +15,12 @@ export async function calculateInitialState(req: Request) {
   let items: Movie[] = [];
   let selectedItem: Movie | null = null;
 
-  // if (paths[0].startsWith('search')) {
-  //   const
-  // }
+  if (paths[0].startsWith('search')) {
+    const queryParams = stringify(query);
+    items = await fetch(`${API_URL}/movies?${queryParams}`)
+      .then(res => res.json())
+      .then(res => res.data);
+  }
 
   if (paths[0].startsWith('film')) {
     const id = paths[1];
