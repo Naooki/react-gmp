@@ -6,6 +6,7 @@ import ReactDOMServer from 'react-dom/server';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import { ServerStyleSheet } from 'styled-components';
+import { ChunkExtractor } from '@loadable/server';
 
 import configureStore from 'configureStore';
 import App from 'containers/App';
@@ -19,6 +20,10 @@ const jsFiles: Array<string> = [];
 const assetsDir = path.resolve(process.cwd(), 'build', 'assets');
 
 fs.readdirSync(assetsDir).forEach(file => {
+  if (file.startsWith('components') || file.startsWith('containers')) {
+    return;
+  }
+
   if (file.split('.').pop() === 'js') {
     jsFiles.push(`/assets/${file}`);
   }
@@ -35,11 +40,15 @@ server.get('*', async (req, res) => {
   const sheet = new ServerStyleSheet();
   const AppCollectedStyles = sheet.collectStyles(<App />);
 
+  const statsFile = path.resolve('./build/loadable-stats.json');
+  const chunkExtractor = new ChunkExtractor({ statsFile });
+  const jsx = chunkExtractor.collectChunks(AppCollectedStyles);
+
   const nodeStream = ReactDOMServer.renderToNodeStream(
     <Html scripts={jsFiles} preloadedState={preloadedState}>
       <Provider store={store}>
         <StaticRouter location={req.url} context={{}}>
-          {AppCollectedStyles}
+          {jsx}
         </StaticRouter>
       </Provider>
     </Html>,

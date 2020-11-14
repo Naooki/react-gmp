@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
+import { loadableReady } from '@loadable/component';
 
 import configureStore from 'configureStore';
 import App from 'containers/App';
@@ -27,10 +28,6 @@ const ConnectedApp = () => (
   </Provider>
 );
 
-document.addEventListener(
-  'DOMContentLoaded',
-  () => {
-    ReactDOM.hydrate(<ConnectedApp />, MOUNT_NODE);
-  },
-  { once: true },
-);
+loadableReady(() => {
+  ReactDOM.hydrate(<ConnectedApp />, MOUNT_NODE);
+});
