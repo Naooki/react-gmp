@@ -1,5 +1,5 @@
-import styled from 'styles/styled-components';
 import { darken, transparentize } from 'polished';
+import styled from '../../styles/styled-components';
 
 export enum ButtonVariant {
   Default = 'default',
