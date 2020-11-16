@@ -1,22 +1,19 @@
 /**
- * COMMON WEBPACK CONFIGURATION
+ * SERVER WEBPACK CONFIGURATION
  */
 
 const path = require('path');
 const webpack = require('webpack');
 
-module.exports = options => ({
-  mode: options.mode,
-  entry: options.entry,
-  output: {
-    // Compile into js/build.js
-    path: path.resolve(process.cwd(), 'build'),
-    publicPath: '/',
-
-    // Merge with env dependent settings
-    ...options.output,
+module.exports = {
+  mode: 'development',
+  entry: {
+    main: './server/index.tsx',
   },
-  optimization: options.optimization,
+  output: {
+    path: path.resolve(process.cwd(), 'build'),
+  },
+  optimization: {},
   module: {
     rules: [
       {
@@ -24,13 +21,20 @@ module.exports = options => ({
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: options.babelQuery,
         },
       },
       {
         test: /\.ts(x?)$/,
         exclude: /node_modules/,
-        use: options.tsLoaders,
+        use: [
+          { loader: 'babel-loader' },
+          {
+            loader: 'ts-loader',
+            options: {
+              logLevel: 'info',
+            },
+          },
+        ],
       },
       {
         test: /\.s[ac]ss$/,
@@ -63,7 +67,6 @@ module.exports = options => ({
             options: {
               // Inline files smaller than 10 kB
               limit: 10 * 1024,
-              // if more than 10 kb move to this folder in build using file-loader
               name: '/assets/[hash].[ext]',
             },
           },
@@ -97,19 +100,18 @@ module.exports = options => ({
       },
     ],
   },
-  plugins: options.plugins.concat([
+  plugins: [
     // Always expose NODE_ENV to webpack, in order to use `process.env.NODE_ENV`
     // inside your code for any environment checks; Terser will automatically
     // drop any unreachable code.
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
     }),
-  ]),
+  ],
   resolve: {
     modules: ['node_modules', 'app'],
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.react.js'],
   },
-  devtool: options.devtool,
-  target: 'web', // Make web variables accessible to webpack, e.g. window
-  performance: options.performance || {},
-});
+  target: 'node',
+  performance: { hints: false },
+};

@@ -9,10 +9,9 @@ import { useDispatch } from 'react-redux';
 import { parse } from 'query-string';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import loadable from '@loadable/component';
 
 import Movies from 'containers/Movies';
-import MoviePage from 'containers/MoviePage';
-import MovieSearch from 'components/MovieSearch';
 import Footer from 'components/Footer';
 import IconLink from 'components/IconLink';
 import { ButtonVariant } from 'components/Button';
@@ -24,6 +23,9 @@ import Logo from 'components/Logo';
 import AddMovieButton from './AddMovieButton';
 import Topbar from './Topbar';
 import Header from './Header';
+
+const MoviePage = loadable(() => import('containers/MoviePage'));
+const MovieSearch = loadable(() => import('components/MovieSearch'));
 
 type RouteParams = {
   id: string;

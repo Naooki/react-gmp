@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { HashedModuleIdsPlugin } = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const LoadablePlugin = require('@loadable/webpack-plugin');
 
 module.exports = require('./webpack.base')({
   mode: 'production',
@@ -10,8 +11,8 @@ module.exports = require('./webpack.base')({
 
   // Utilize long-term caching by adding content hashes (not compilation hashes) to compiled assets
   output: {
-    filename: '[name].[chunkhash].js',
-    chunkFilename: '[name].[chunkhash].chunk.js',
+    filename: 'assets/[name].[chunkhash].js',
+    chunkFilename: 'assets/[name].[chunkhash].chunk.js',
   },
 
   tsLoaders: [
@@ -96,6 +97,8 @@ module.exports = require('./webpack.base')({
       hashDigest: 'hex',
       hashDigestLength: 20,
     }),
+
+    new LoadablePlugin(),
   ],
 
   performance: {

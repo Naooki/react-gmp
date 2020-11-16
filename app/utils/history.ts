@@ -1,4 +1,9 @@
-import { createBrowserHistory } from 'history';
+import { createMemoryHistory, createBrowserHistory } from 'history';
 
-const history = createBrowserHistory();
-export default history;
+export default function createHistory(url?: string) {
+  return url
+    ? createMemoryHistory({
+        initialEntries: [url],
+      })
+    : createBrowserHistory();
+}

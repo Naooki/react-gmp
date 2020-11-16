@@ -2,26 +2,32 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
+import { loadableReady } from '@loadable/component';
 
 import configureStore from 'configureStore';
 import App from 'containers/App';
-import { ThemeProvider, theme } from 'styles/styled-components';
-import history from 'utils/history';
 
-const MOUNT_NODE = document.getElementById('app') as HTMLElement;
+const MOUNT_NODE = document.getElementById('root') as HTMLElement;
+
+// eslint-disable-next-line no-underscore-dangle
+const preloadedState = (window as any).__PRELOADED_STATE__;
+console.log(preloadedState);
+
+// eslint-disable-next-line no-underscore-dangle
+delete (window as any).__PRELOADED_STATE__;
 
 // Create redux store with history
 const initialState = {};
-const store = configureStore(initialState);
+const { store, history } = configureStore(preloadedState || initialState);
 
 const ConnectedApp = () => (
   <Provider store={store}>
     <ConnectedRouter history={history}>
-      <ThemeProvider theme={theme.default}>
-        <App />
-      </ThemeProvider>
+      <App />
     </ConnectedRouter>
   </Provider>
 );
 
-ReactDOM.render(<ConnectedApp />, MOUNT_NODE);
+loadableReady(() => {
+  ReactDOM.hydrate(<ConnectedApp />, MOUNT_NODE);
+});

@@ -3,15 +3,18 @@ import { createEpicMiddleware } from 'redux-observable';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { routerMiddleware } from 'connected-react-router';
 
-import history from 'utils/history';
+import createHistory from 'utils/history';
 import createEpic from 'epics';
 import createReducer from 'reducers';
 import { ApplicationRootState } from 'types';
 
 export default function configureStore(
   initialState: ApplicationRootState | Record<string, unknown> = {},
+  url?: string,
 ) {
   const epicMiddleware = createEpicMiddleware();
+
+  const history = createHistory(url);
   const connectedRouterMiddleware = routerMiddleware(history);
   const middlewares = [connectedRouterMiddleware, epicMiddleware];
 
@@ -33,5 +36,5 @@ export default function configureStore(
   ) as Store;
   epicMiddleware.run(createEpic());
 
-  return store;
+  return { store, history };
 }

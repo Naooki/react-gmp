@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-import styled from 'styles/styled-components';
+import styled, { ThemeProvider, theme } from 'styles/styled-components';
 import Login from 'containers/Login';
 import Home from 'containers/Home';
 import NotFoundPage from 'containers/NotFoundPage';
@@ -18,18 +18,20 @@ const ModalContainer = styled.div`
 
 function App() {
   return (
-    <ModalContainer>
-      <Switch>
-        <Route exact path="/">
-          <Redirect to="/search" />
-        </Route>
-        <Route exact path="/login" component={Login} />
-        <Route path="/(search|film)" component={Home} />
-        <Route component={NotFoundPage} />
-      </Switch>
-      <GlobalStyle />
-      <Modal />
-    </ModalContainer>
+    <ThemeProvider theme={theme.default}>
+      <ModalContainer>
+        <Switch>
+          <Route exact path="/">
+            <Redirect to="/search" />
+          </Route>
+          <Route exact path="/login" component={Login} />
+          <Route path="/(search|film)" component={Home} />
+          <Route component={NotFoundPage} />
+        </Switch>
+        <GlobalStyle />
+        <Modal />
+      </ModalContainer>
+    </ThemeProvider>
   );
 }
 
